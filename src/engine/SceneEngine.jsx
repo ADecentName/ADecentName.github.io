@@ -1,0 +1,85 @@
+import { useGame } from '../game/GameContext.jsx'
+import { getScene } from '../game/reducer.js'
+import { ACTION_BY_ID } from '../data/actions.js'
+import DialogueBox from '../components/DialogueBox.jsx'
+import ChoiceList from '../components/ChoiceList.jsx'
+import FeedbackModal from '../components/FeedbackModal.jsx'
+import ScoreHUD from '../components/ScoreHUD.jsx'
+
+// Orchestrates the current scene: background + dialogue + choices, the
+// feedback modal, and the transition to the chapter-end screen at a terminus.
+export default function SceneEngine() {
+  const { state, dispatch } = useGame()
+  const scene = getScene(state)
+  const chapter = ACTION_BY_ID[state.activeChapter]
+
+  if (!scene) {
+    // Defensive: unknown scene id — bail back to the hub.
+    return (
+      <div className="screen scene-screen">
+        <p>Something went wrong loading this scene.</p>
+        <button className="btn btn-primary" onClick={() => dispatch({ type: 'GO_HUB' })}>
+          Back to chapters
+        </button>
+      </div>
+    )
+  }
+
+  const isTerminus = !!scene.ending
+
+  return (
+    <div className={`screen scene-screen bg-${scene.background || 'default'}`}>
+      <div className="scene-topbar">
+        <button className="btn btn-ghost" onClick={() => dispatch({ type: 'GO_HUB' })}>
+          ← Chapters
+        </button>
+        {chapter && (
+          <span className="scene-chapter-tag" style={{ '--accent': chapter.color }}>
+            {chapter.emoji} {chapter.officialTitle}
+          </span>
+        )}
+        <ScoreHUD />
+      </div>
+
+      <div className="scene-stage">
+        {scene.speaker && scene.speaker !== 'Narrator' && (
+          <div className="scene-sprite" aria-hidden="true">
+            {spriteFor(scene.speaker)}
+          </div>
+        )}
+      </div>
+
+      <div className="scene-bottom">
+        <DialogueBox scene={scene} />
+        {isTerminus ? (
+          <div className="choice-list is-continue">
+            <button
+              className="btn btn-continue"
+              onClick={() => dispatch({ type: 'FINISH_CHAPTER' })}
+            >
+              Finish chapter →
+            </button>
+          </div>
+        ) : (
+          <ChoiceList scene={scene} />
+        )}
+      </div>
+
+      {state.pendingFeedback && <FeedbackModal feedback={state.pendingFeedback} />}
+    </div>
+  )
+}
+
+// Placeholder "sprites" — an emoji per speaker. Swap for real art later by
+// mapping speaker keys to images in assets/.
+function spriteFor(speaker) {
+  const map = {
+    Mika: '🧑🏻',
+    Jules: '🧑🏽‍🦱',
+    Sam: '🧒🏼',
+    'Ms Tan': '👩🏻‍🏫',
+    Coach: '👩🏻‍🏫',
+    Phone: '📱',
+  }
+  return map[speaker] || '💬'
+}
