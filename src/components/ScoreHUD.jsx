@@ -1,24 +1,27 @@
 import { useGame } from '../game/GameContext.jsx'
-import { ACTIONS } from '../data/actions.js'
+import { CHAPTER_BY_ID } from '../data/chapters.js'
+import { metricInfo } from '../data/metrics.js'
+import { metricPct } from '../game/scoring.js'
 
-// Compact always-visible readout of the four pillar scores during a scene.
-// The active chapter's pillar is highlighted.
+// Live readout of the active chapter's tracked metrics as small meters.
+// Only shown while a chapter is being played.
 export default function ScoreHUD() {
   const { state } = useGame()
+  const chapter = CHAPTER_BY_ID[state.activeChapter]
+  if (!chapter) return null
+  const bucket = state.scores[chapter.id] || {}
+
   return (
-    <div className="score-hud" aria-label="Your online-safety scores">
-      {ACTIONS.map((a) => {
-        const active = state.activeChapter === a.id
-        const score = state.scores[a.id]
+    <div className="score-hud" aria-label="Your live scores this chapter">
+      {chapter.metrics.map((key) => {
+        const m = metricInfo(key)
+        const pct = metricPct(chapter.id, key, bucket[key] || 0)
         return (
-          <div
-            key={a.id}
-            className={`hud-pill${active ? ' is-active' : ''}`}
-            style={{ '--accent': a.color }}
-            title={a.officialTitle}
-          >
-            <span className="hud-emoji">{a.emoji}</span>
-            <span className="hud-score">{score > 0 ? `+${score}` : score}</span>
+          <div key={key} className="hud-pill" style={{ '--accent': m.color }} title={m.label}>
+            <span className="hud-emoji">{m.emoji}</span>
+            <span className="hud-bar" aria-hidden="true">
+              <span className="hud-bar-fill" style={{ width: `${pct}%` }} />
+            </span>
           </div>
         )
       })}

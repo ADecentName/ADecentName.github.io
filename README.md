@@ -1,22 +1,27 @@
 # SafeSteps
 
-A short, choose-your-path **visual novel about staying safe online**, built with React + Vite.
-You play **Mika**, a student, across four everyday online moments — one chapter for each of
-**IMDA's four key online-safety actions**:
+A short, choose-your-path **educational game about staying safe online**, built with React + Vite.
+You play as a student across four chapters — one for each of **IMDA's four key online-safety
+actions**. Each chapter runs a few real-world scenarios, scores your choices on its own metrics,
+and reveals a themed meter at the end:
 
-| Chapter | Key action | About |
-|---|---|---|
-| 🛡️ Late Night, Loud Chat | **Set boundaries online** | Screen-time limits, what you share, privacy settings |
-| 🧠 The Screenshot | **Think before you act** | Pause before you post, forward, click, or reply |
-| 🚩 Piling On | **Report inappropriate content** | Block, report, and keep evidence |
-| 🤝 Are You Okay? | **Reach out & support** | Support a friend; know when to tell a trusted adult |
+| Chapter | Key action | Scenarios | Meter |
+|---|---|---|---|
+| 🛡️ Taking Control | **Set Boundaries Online** | Public vs private account · password + 2FA · screen-time balance | 🔥 **Boundary Meter** (Privacy · Safety · Wellbeing) |
+| 🧠 Your Digital Footprint | **Think Before You Act** | Oversharing a selfie · e-commerce scam · posting with kindness | 👣 **Digital Footprint Score** (Safety · Citizenship) |
+| 🚩 Stop the Spread | **Report Inappropriate Content** | Shoplifting video · viral fight clip · rumour account | 🌐 **Digital Citizenship Score** (Awareness · Responsibility) |
+| 🤝 You Are Not Alone | **Reach Out & Support** | Scam aftermath · fake AI video of a friend · being cyberbullied | 💚 **Support Score** |
 
-Each choice is scored and followed by a short explanation of *why* it was a safe or risky
-move. Finish all four chapters to see a per-action results breakdown.
+Every scored choice pops a **teaching moment** (safe / could-be-safer / risky, why, and the
+metric change). Scenarios are followed by **"Did You Know?"** fact cards (with sources),
+short **"how to report"** tutorials for TikTok / YouTube / Instagram, and **bonus questions**.
+The support chapter surfaces real Singapore helplines. Finish all four chapters for a combined
+results screen.
 
 > IMDA's official fourth action is *"Engage & support your child"* (parent-facing). Because the
-> player here is a teenager, it is reframed as *"Reach out & support"* so it is playable from a
-> youth's point of view.
+> player here is a teenager, it is reframed as *"Reach Out & Support"* so it is playable from a
+> youth's point of view. The self-harm branch in the source brief was reframed responsibly as
+> "reach out / retaliate / bottle it up", paired with helpline resources.
 
 ## Run locally
 
@@ -43,16 +48,21 @@ In the repository, set **Settings → Pages → Source** to **GitHub Actions** o
 
 ```
 src/
-  data/         actions.js (the 4 IMDA pillars) + scenes.js (all branching content)
-  game/         reducer.js + GameContext.jsx (state machine)
+  data/         metrics.js (score dimensions) + chapters.js (the 4 chapters & meters)
+                + scenes.js (all branching content)
+  game/         reducer.js + GameContext.jsx (state machine) + scoring.js (% + tiers)
   engine/       SceneEngine.jsx (renders the current scene)
-  components/   Title, Hub, DialogueBox, ChoiceList, FeedbackModal, ScoreHUD, endings
+  components/   Title, Hub, DialogueBox, ChoiceList, InfoPanel, FeedbackModal,
+                ScoreHUD, ChapterEndScreen, EndingScreen
   styles/       global.css
 scripts/        validate-scenes.mjs (scene-graph integrity check)
 ```
 
-Adding or editing content is done entirely in `src/data/scenes.js` — the engine renders
-whatever scene it is pointed at.
+Content lives in `src/data/`. A scene is one of three shapes — a **decision** (choices with
+`effects` + `feedback`), an **info panel** (`intro` / `didYouKnow` / `tutorial` / `resources`,
+advancing via `next`), or a **terminus** (`ending`). Metric score bounds are derived
+automatically from the scenes, so `scoring.js` needs no manual tuning when you edit content.
+Run the validator after editing.
 
 ---
 

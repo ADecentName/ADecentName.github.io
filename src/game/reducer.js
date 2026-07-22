@@ -1,29 +1,36 @@
-// Game state: a small finite-state machine over screens plus per-pillar scores.
-// All transitions live here so components stay dumb (dispatch intents, render state).
+// Game state: a small finite-state machine over screens plus per-chapter,
+// per-metric scores. All transitions live here so components stay dumb
+// (dispatch intents, render state).
 
-import { ACTION_IDS } from '../data/actions.js'
+import { CHAPTERS, CHAPTER_IDS } from '../data/chapters.js'
 import { SCENES, CHAPTER_START } from '../data/scenes.js'
 
-const zeroScores = () => Object.fromEntries(ACTION_IDS.map((id) => [id, 0]))
+// scores = { [chapterId]: { [metricKey]: points } } — one bucket per chapter,
+// initialised to 0 for each metric that chapter tracks.
+const zeroScores = () =>
+  Object.fromEntries(
+    CHAPTERS.map((c) => [c.id, Object.fromEntries(c.metrics.map((m) => [m, 0]))]),
+  )
 
 export const initialState = {
   screen: 'title', // 'title' | 'hub' | 'scene' | 'chapterEnd' | 'ending'
   currentSceneId: null,
-  activeChapter: null, // pillar id of the chapter being played
-  scores: zeroScores(), // { boundaries, think, report, support }
-  completedChapters: [], // pillar ids finished at least once
-  pendingFeedback: null, // feedback object to show before advancing
+  activeChapter: null, // chapter id being played
+  scores: zeroScores(),
+  completedChapters: [], // chapter ids finished at least once
+  pendingFeedback: null, // { verdict, note, action, effects } shown before advancing
   nextAfterFeedback: null, // scene id queued behind the feedback modal
-  history: [], // visited scene ids within the current chapter (for Back)
+  history: [], // visited scene ids within the current chapter
 }
 
-function applyEffects(scores, effects) {
-  if (!effects) return scores
-  const next = { ...scores }
-  for (const [pillar, delta] of Object.entries(effects)) {
-    if (pillar in next) next[pillar] += delta
+// Apply a choice's effects onto the active chapter's score bucket.
+function applyEffects(scores, chapterId, effects) {
+  if (!effects || !chapterId) return scores
+  const bucket = { ...(scores[chapterId] || {}) }
+  for (const [metric, delta] of Object.entries(effects)) {
+    bucket[metric] = (bucket[metric] || 0) + delta
   }
-  return next
+  return { ...scores, [chapterId]: bucket }
 }
 
 export function reducer(state, action) {
@@ -47,13 +54,13 @@ export function reducer(state, action) {
 
     case 'CHOOSE': {
       const { choice } = action
-      const scores = applyEffects(state.scores, choice.effects)
+      const scores = applyEffects(state.scores, state.activeChapter, choice.effects)
       // A choice with feedback pauses on the modal before advancing.
       if (choice.feedback) {
         return {
           ...state,
           scores,
-          pendingFeedback: choice.feedback,
+          pendingFeedback: { ...choice.feedback, effects: choice.effects || null },
           nextAfterFeedback: choice.next,
         }
       }
@@ -63,6 +70,18 @@ export function reducer(state, action) {
         scores,
         currentSceneId: choice.next,
         history: [...state.history, choice.next],
+      }
+    }
+
+    // Info panels (intro / didYouKnow / tutorial / resources) advance via
+    // their own `next` with no scoring.
+    case 'ADVANCE': {
+      const nextId = action.next
+      if (!nextId) return state
+      return {
+        ...state,
+        currentSceneId: nextId,
+        history: [...state.history, nextId],
       }
     }
 
@@ -111,4 +130,4 @@ export function reducer(state, action) {
 export const getScene = (state) => SCENES[state.currentSceneId] || null
 
 export const allChaptersComplete = (state) =>
-  ACTION_IDS.every((id) => state.completedChapters.includes(id))
+  CHAPTER_IDS.every((id) => state.completedChapters.includes(id))

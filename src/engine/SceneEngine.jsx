@@ -1,20 +1,20 @@
 import { useGame } from '../game/GameContext.jsx'
 import { getScene } from '../game/reducer.js'
-import { ACTION_BY_ID } from '../data/actions.js'
+import { CHAPTER_BY_ID } from '../data/chapters.js'
 import DialogueBox from '../components/DialogueBox.jsx'
 import ChoiceList from '../components/ChoiceList.jsx'
+import InfoPanel from '../components/InfoPanel.jsx'
 import FeedbackModal from '../components/FeedbackModal.jsx'
 import ScoreHUD from '../components/ScoreHUD.jsx'
 
-// Orchestrates the current scene: background + dialogue + choices, the
+// Orchestrates the current scene: background + dialogue/info + choices, the
 // feedback modal, and the transition to the chapter-end screen at a terminus.
 export default function SceneEngine() {
   const { state, dispatch } = useGame()
   const scene = getScene(state)
-  const chapter = ACTION_BY_ID[state.activeChapter]
+  const chapter = CHAPTER_BY_ID[state.activeChapter]
 
   if (!scene) {
-    // Defensive: unknown scene id — bail back to the hub.
     return (
       <div className="screen scene-screen">
         <p>Something went wrong loading this scene.</p>
@@ -25,6 +25,7 @@ export default function SceneEngine() {
     )
   }
 
+  const isInfo = !!scene.panel
   const isTerminus = !!scene.ending
 
   return (
@@ -42,7 +43,7 @@ export default function SceneEngine() {
       </div>
 
       <div className="scene-stage">
-        {scene.speaker && scene.speaker !== 'Narrator' && (
+        {!isInfo && scene.speaker && scene.speaker !== 'Narrator' && (
           <div className="scene-sprite" aria-hidden="true">
             {spriteFor(scene.speaker)}
           </div>
@@ -50,18 +51,25 @@ export default function SceneEngine() {
       </div>
 
       <div className="scene-bottom">
-        <DialogueBox scene={scene} />
-        {isTerminus ? (
-          <div className="choice-list is-continue">
-            <button
-              className="btn btn-continue"
-              onClick={() => dispatch({ type: 'FINISH_CHAPTER' })}
-            >
-              Finish chapter →
-            </button>
-          </div>
+        {isInfo ? (
+          <InfoPanel scene={scene} />
         ) : (
-          <ChoiceList scene={scene} />
+          <>
+            {scene.bonus && <div className="scene-bonus-badge">⭐ Bonus question</div>}
+            <DialogueBox scene={scene} />
+            {isTerminus ? (
+              <div className="choice-list is-continue">
+                <button
+                  className="btn btn-continue"
+                  onClick={() => dispatch({ type: 'FINISH_CHAPTER' })}
+                >
+                  See your result →
+                </button>
+              </div>
+            ) : (
+              <ChoiceList scene={scene} />
+            )}
+          </>
         )}
       </div>
 
@@ -70,15 +78,13 @@ export default function SceneEngine() {
   )
 }
 
-// Placeholder "sprites" — an emoji per speaker. Swap for real art later by
-// mapping speaker keys to images in assets/.
+// Placeholder "sprites" — an emoji per speaker. Swap for real art later.
 function spriteFor(speaker) {
   const map = {
     Mika: '🧑🏻',
     Jules: '🧑🏽‍🦱',
-    Sam: '🧒🏼',
-    'Ms Tan': '👩🏻‍🏫',
-    Coach: '👩🏻‍🏫',
+    Seller: '🧑🏻‍💻',
+    Reward: '🎁',
     Phone: '📱',
   }
   return map[speaker] || '💬'
