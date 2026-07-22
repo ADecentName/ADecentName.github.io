@@ -6,9 +6,10 @@
 //
 // IMDA's four key actions:
 //   (1) Set boundaries online   (2) Report inappropriate content
-//   (3) Think before you act     (4) Engage & support
-// Action 4 is played from a youth's point of view (support a friend / seek
-// help), so it is framed as "Reach out & support".
+//   (3) Think before you act     (4) Engage & Support
+// All four keep IMDA's official action names. Action 4, "Engage & Support",
+// is written parent-facing by IMDA; here its scenarios are played from a
+// youth's point of view (support a friend / seek help yourself).
 //
 // Keep the `id`s stable — scenes.js maps each scene to a chapter by id and
 // CHAPTER_START (in scenes.js) points at each chapter's first scene.
@@ -126,7 +127,7 @@ export const CHAPTERS = [
   {
     id: 'support',
     order: 4,
-    officialTitle: 'Reach Out & Support',
+    officialTitle: 'Engage & Support',
     chapterTitle: 'You Are Not Alone',
     short: 'Seek and offer support during difficult moments online.',
     emoji: '🤝',

@@ -855,7 +855,7 @@ const scenes = [
     background: 'phone_dm',
     panel: {
       kind: 'intro',
-      eyebrow: 'Action 4 · Reach Out & Support',
+      eyebrow: 'Action 4 · Engage & Support',
       title: 'Nobody should face it alone.',
       body: [
         'Provide and seek support during difficult moments — building a habit of reaching out and open communication.',
@@ -879,7 +879,7 @@ const scenes = [
         feedback: {
           verdict: 'risky',
           note: 'Handling it alone delays real help. The scammer won\'t respond, and the delay gives them time to move your money — lowering your chances of getting it back. Facing it alone also piles on stress and anxiety.',
-          action: 'Reach Out & Support',
+          action: 'Engage & Support',
         },
       },
       {
@@ -889,7 +889,7 @@ const scenes = [
         feedback: {
           verdict: 'good',
           note: 'Great choice! A scam is overwhelming, and feeling shocked or embarrassed is normal. A trusted person can steady you, reassure you, and support you while you contact your bank and report it. You don\'t have to face this alone.',
-          action: 'Reach Out & Support',
+          action: 'Engage & Support',
         },
       },
       {
@@ -899,7 +899,7 @@ const scenes = [
         feedback: {
           verdict: 'good',
           note: 'Excellent! Reporting fast gives your bank the best chance to freeze suspicious transactions and helps the authorities investigate. Acting early reduces losses and improves your chances of recovering the money.',
-          action: 'Reach Out & Support',
+          action: 'Engage & Support',
         },
       },
       {
@@ -909,7 +909,7 @@ const scenes = [
         feedback: {
           verdict: 'risky',
           note: 'Many victims feel embarrassed and stay silent — but that delays help from your bank and the authorities, increasing losses. It also cuts you off from the comfort trusted people can give, making everything feel heavier.',
-          action: 'Reach Out & Support',
+          action: 'Engage & Support',
         },
       },
     ],
@@ -948,7 +948,7 @@ const scenes = [
         feedback: {
           verdict: 'risky',
           note: 'Ignoring it leaves your friend to face the threats alone. Without support they may feel even more isolated and frightened — and the fake video keeps spreading if no one reports it.',
-          action: 'Reach Out & Support',
+          action: 'Engage & Support',
         },
       },
       {
@@ -958,7 +958,7 @@ const scenes = [
         feedback: {
           verdict: 'good',
           note: 'Great choice! Emotional support reassures your friend they\'re not alone and eases the fear, shame and isolation. Encouraging them to get help makes them more likely to take steps to protect themselves.',
-          action: 'Reach Out & Support',
+          action: 'Engage & Support',
         },
       },
       {
@@ -968,7 +968,7 @@ const scenes = [
         feedback: {
           verdict: 'risky',
           note: 'Sharing exposes more people to the fake, increasing its reach and harming your friend further. It can also draw more people into the harassment, making everything more distressing for them.',
-          action: 'Reach Out & Support',
+          action: 'Engage & Support',
         },
       },
       {
@@ -978,7 +978,7 @@ const scenes = [
         feedback: {
           verdict: 'good',
           note: 'Excellent! Saving evidence preserves what investigators need. Reporting to the platform can get the posts removed, and reporting the threats to the police lets them act. Your help also shows your friend they\'re not alone.',
-          action: 'Reach Out & Support',
+          action: 'Engage & Support',
         },
       },
     ],
@@ -1017,7 +1017,7 @@ const scenes = [
         feedback: {
           verdict: 'good',
           note: 'This is the bravest and strongest choice. Sharing what you\'re going through means you don\'t carry it alone — a trusted person or helpline can support you emotionally and help you report and stop the bullying. Reaching out is never weakness.',
-          action: 'Reach Out & Support',
+          action: 'Engage & Support',
         },
       },
       {
@@ -1027,7 +1027,7 @@ const scenes = [
         feedback: {
           verdict: 'risky',
           note: 'It\'s understandable to want to hit back, but retaliating usually escalates the conflict and can drag you into the same harmful behaviour — often making things worse. Report, block, save evidence, and tell someone you trust instead.',
-          action: 'Reach Out & Support',
+          action: 'Engage & Support',
         },
       },
       {
@@ -1037,7 +1037,7 @@ const scenes = [
         feedback: {
           verdict: 'risky',
           note: 'Staying silent can feel safer, but bottling it up lets the hurt grow and leaves you isolated with it. You deserve support — telling someone you trust is the first step to feeling lighter and getting the bullying stopped.',
-          action: 'Reach Out & Support',
+          action: 'Engage & Support',
         },
       },
     ],
@@ -1070,7 +1070,7 @@ const scenes = [
     background: 'school_corridor',
     text: 'Shared, reported, and no longer carried alone. It already feels a little lighter.',
     ending: {
-      title: 'Chapter complete — Reach Out & Support',
+      title: 'Chapter complete — Engage & Support',
       text: 'Whether you\'re helping a friend or struggling yourself, one message can start it. And when a worry is too big, telling a trusted adult — or a helpline — is strength. You were never meant to carry it alone.',
     },
   },

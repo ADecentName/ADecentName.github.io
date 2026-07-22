@@ -10,7 +10,7 @@ and reveals a themed meter at the end:
 | 🛡️ Taking Control | **Set Boundaries Online** | Public vs private account · password + 2FA · screen-time balance | 🔥 **Boundary Meter** (Privacy · Safety · Wellbeing) |
 | 🧠 Your Digital Footprint | **Think Before You Act** | Oversharing a selfie · e-commerce scam · posting with kindness | 👣 **Digital Footprint Score** (Safety · Citizenship) |
 | 🚩 Stop the Spread | **Report Inappropriate Content** | Shoplifting video · viral fight clip · rumour account | 🌐 **Digital Citizenship Score** (Awareness · Responsibility) |
-| 🤝 You Are Not Alone | **Reach Out & Support** | Scam aftermath · fake AI video of a friend · being cyberbullied | 💚 **Support Score** |
+| 🤝 You Are Not Alone | **Engage & Support** | Scam aftermath · fake AI video of a friend · being cyberbullied | 💚 **Support Score** |
 
 Every scored choice pops a **teaching moment** (safe / could-be-safer / risky, why, and the
 metric change). Scenarios are followed by **"Did You Know?"** fact cards (with sources),
@@ -18,10 +18,12 @@ short **"how to report"** tutorials for TikTok / YouTube / Instagram, and **bonu
 The support chapter surfaces real Singapore helplines. Finish all four chapters for a combined
 results screen.
 
-> IMDA's official fourth action is *"Engage & support your child"* (parent-facing). Because the
-> player here is a teenager, it is reframed as *"Reach Out & Support"* so it is playable from a
-> youth's point of view. The self-harm branch in the source brief was reframed responsibly as
-> "reach out / retaliate / bottle it up", paired with helpline resources.
+> The four chapters use IMDA's official action names (**Set Boundaries Online · Think Before You
+> Act · Report Inappropriate Content · Engage & Support**), in IMDA's order. IMDA writes the
+> fourth action for parents ("engage & support your child"); here its scenarios are played from a
+> teenager's point of view — supporting a friend, or seeking help yourself. The self-harm branch
+> in the source brief was reframed responsibly as "reach out / retaliate / bottle it up", paired
+> with Singapore helpline resources.
 
 ## Run locally
 
