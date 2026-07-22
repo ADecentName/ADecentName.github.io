@@ -12,7 +12,7 @@ export const METRICS = {
   wellbeing: { key: 'wellbeing', label: 'Wellbeing', emoji: '❤️', color: '#ff5470' },
   awareness: { key: 'awareness', label: 'Awareness', emoji: '🧠', color: '#ffb02e' },
   responsibility: { key: 'responsibility', label: 'Responsibility', emoji: '🌐', color: '#2ecc9b' },
-  citizenship: { key: 'citizenship', label: 'Digital Citizenship', emoji: '🌍', color: '#34d399' },
+  citizenship: { key: 'citizenship', label: 'Digital Citizenship', emoji: '🌐', color: '#34d399' },
   support: { key: 'support', label: 'Support', emoji: '🤝', color: '#22d3ee' },
 }
 
