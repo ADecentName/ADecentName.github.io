@@ -1,4 +1,5 @@
 import { useGame } from '../game/GameContext.jsx'
+import PhoneMock from './PhoneMock.jsx'
 
 // Renders a non-decision scene: a chapter intro, a "Did You Know?" fact card,
 // a "how to report" tutorial, or a support-resources card. Each advances via
@@ -14,7 +15,10 @@ export default function InfoPanel({ scene }) {
 
       {p.kind === 'didYouKnow' && <p className="info-tag">💡 Did You Know?</p>}
       {p.kind === 'tutorial' && (
-        <p className="info-tag">📲 {p.platform ? `${p.platform} · ` : ''}How to report</p>
+        <p className="info-tag">
+          📲 {p.platform ? `${p.platform} · ` : ''}
+          {p.tagLabel || 'How to report'}
+        </p>
       )}
       {p.kind === 'resources' && <p className="info-tag">🫶 Support &amp; Resources</p>}
 
@@ -43,6 +47,8 @@ export default function InfoPanel({ scene }) {
           ))}
         </ol>
       )}
+
+      {p.mockup && <PhoneMock kind={p.mockup} />}
 
       {p.resources && (
         <ul className="info-resources">

@@ -117,6 +117,30 @@ const scenes = [
         },
       ],
     },
+    next: 'b_s1_tut',
+  },
+  {
+    id: 'b_s1_tut',
+    chapter: 'boundaries',
+    background: 'app_signup',
+    panel: {
+      kind: 'tutorial',
+      platform: 'Instagram',
+      tagLabel: 'How to go private',
+      title: "Let's make your Instagram account private",
+      body: [
+        "Fixing this at the root is quick — here's exactly where the setting lives, and you can try the switch yourself below.",
+      ],
+      steps: [
+        'Open your profile and tap the ☰ menu (top right).',
+        'Tap "Settings and activity".',
+        'Under "Who can see your content", tap "Account privacy".',
+        'Turn on "Private account", then confirm "Switch to private".',
+      ],
+      mockup: 'ig-privacy',
+      footer:
+        'Once private, only people you approve can follow you and see your posts. You can switch back anytime — but private is the safer default.',
+    },
     next: 'b_s2',
   },
   {
