@@ -772,6 +772,58 @@ body {
   color: #6a6a6a;
 }
 
+/* "See what others see" CTA */
+.ig-cta {
+  display: block;
+  width: calc(100% - 32px);
+  margin: 14px 16px 4px;
+  padding: 11px 0;
+  border: none;
+  border-radius: 10px;
+  background: #0095f6;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* Visitor (stranger) view of a private profile */
+.ig-btn.ig-follow {
+  background: #0095f6;
+  color: #fff;
+}
+.ig-private-block {
+  border-top: 1px solid #262626;
+  margin-top: 12px;
+  padding: 28px 24px 20px;
+  text-align: center;
+}
+.ig-private-lock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  margin-bottom: 12px;
+}
+.ig-private-lock svg {
+  width: 26px;
+  height: 26px;
+}
+.ig-private-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.ig-private-sub {
+  margin: 5px 0 0;
+  color: #a8a8a8;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
 /* Tap-guide pulse */
 @keyframes igPulse {
   0%,

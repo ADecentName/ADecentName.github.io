@@ -12,19 +12,20 @@ export default function PhoneMock({ kind }) {
 // A navigable mock of the real path to going private on Instagram:
 //   Profile  →  (menu)  →  Settings and activity  →  Account privacy  →  toggle
 function IgPrivacyMock() {
-  const [screen, setScreen] = useState('profile') // 'profile' | 'settings' | 'privacy'
+  // 'profile' | 'settings' | 'privacy' | 'visitor'
+  const [screen, setScreen] = useState('profile')
   const [isPrivate, setPrivate] = useState(false)
 
-  const goBack = () => setScreen(screen === 'privacy' ? 'settings' : 'profile')
+  const goBack = () =>
+    setScreen(
+      screen === 'visitor'
+        ? 'privacy'
+        : screen === 'privacy'
+          ? 'settings'
+          : 'profile',
+    )
 
-  const caption =
-    screen === 'profile'
-      ? '👆 Tap the menu (☰) in the top-right to open your settings.'
-      : screen === 'settings'
-        ? '👆 Now tap "Account privacy".'
-        : isPrivate
-          ? '🔒 Private is on — that single switch is the root fix. (Tap again to compare.)'
-          : '👆 Tap the toggle to switch your account to Private.'
+  const caption = captionFor(screen, isPrivate)
 
   return (
     <figure className="phone-guide">
@@ -52,8 +53,10 @@ function IgPrivacyMock() {
               onBack={goBack}
               isPrivate={isPrivate}
               onToggle={() => setPrivate((v) => !v)}
+              onSeeVisitor={() => setScreen('visitor')}
             />
           )}
+          {screen === 'visitor' && <VisitorScreen onBack={goBack} />}
         </div>
       </div>
       <figcaption className="phone-mock-caption">{caption}</figcaption>
@@ -151,7 +154,7 @@ function SettingsScreen({ onBack, onPrivacy }) {
   )
 }
 
-function PrivacyScreen({ onBack, isPrivate, onToggle }) {
+function PrivacyScreen({ onBack, isPrivate, onToggle, onSeeVisitor }) {
   return (
     <>
       <NavBar title="Account privacy" onBack={onBack} />
@@ -172,8 +175,65 @@ function PrivacyScreen({ onBack, isPrivate, onToggle }) {
           ? 'When your account is private, only the followers you approve can see what you share, including your photos or videos on hashtag and location pages, and your followers and following lists. Certain info on your profile, like your profile picture and username, is visible to everyone on and off Instagram.'
           : "When your account is public, your profile and posts can be seen by anyone, on or off Instagram, even if they don't have an Instagram account."}
       </p>
+      {isPrivate && (
+        <button type="button" className="ig-cta ig-pulse" onClick={onSeeVisitor}>
+          👀 See what others see now →
+        </button>
+      )}
     </>
   )
+}
+
+// The now-private profile as a stranger (non-follower) sees it: bio and counts
+// are still visible, but the posts are hidden behind Instagram's private state.
+function VisitorScreen({ onBack }) {
+  return (
+    <>
+      <NavBar title="mika.sg" onBack={onBack} />
+      <div className="ig-profile-head">
+        <span className="ig-avatar" aria-hidden="true" />
+        <div className="ig-stats">
+          <span className="ig-stat">
+            <strong>27</strong>posts
+          </span>
+          <span className="ig-stat">
+            <strong>182</strong>followers
+          </span>
+          <span className="ig-stat">
+            <strong>164</strong>following
+          </span>
+        </div>
+      </div>
+      <p className="ig-name">Mika</p>
+      <p className="ig-bio">📷 just vibes · 🏫 SG</p>
+
+      <div className="ig-profile-actions">
+        <span className="ig-btn ig-follow">Follow</span>
+        <span className="ig-btn">Message</span>
+      </div>
+
+      <div className="ig-private-block">
+        <span className="ig-private-lock" aria-hidden="true">
+          <LockIcon />
+        </span>
+        <p className="ig-private-title">This account is private</p>
+        <p className="ig-private-sub">
+          Follow this account to see their photos and videos.
+        </p>
+      </div>
+    </>
+  )
+}
+
+function captionFor(screen, isPrivate) {
+  if (screen === 'profile')
+    return '👆 Tap the menu (☰) in the top-right to open your settings.'
+  if (screen === 'settings') return '👆 Now tap "Account privacy".'
+  if (screen === 'visitor')
+    return "🔒 That's a stranger's view — your posts stay hidden until you approve them as a follower."
+  return isPrivate
+    ? '🔒 Private is on! Now tap "See what others see" to view your profile as a stranger.'
+    : '👆 Tap the toggle to switch your account to Private.'
 }
 
 function NavBar({ title, onBack }) {
