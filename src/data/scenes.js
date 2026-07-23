@@ -129,13 +129,7 @@ const scenes = [
       tagLabel: 'How to go private',
       title: "Let's make your Instagram account private",
       body: [
-        "Fixing this at the root is quick — here's exactly where the setting lives, and you can try the switch yourself below.",
-      ],
-      steps: [
-        'Open your profile and tap the ☰ menu (top right).',
-        'Tap "Settings and activity".',
-        'Under "Who can see your content", tap "Account privacy".',
-        'Turn on "Private account", then confirm "Switch to private".',
+        'Fixing this at the root is quick — try it yourself on the phone below. Tap through from your profile to Settings, then into Account privacy, and switch on Private account.',
       ],
       mockup: 'ig-privacy',
       footer:
