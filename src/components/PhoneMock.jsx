@@ -9,8 +9,10 @@ export default function PhoneMock({ kind }) {
   return null
 }
 
-// A mock of Instagram's "Account privacy" screen with a working Private-account
-// toggle, so the player can try switching their account to private.
+// A mock of Instagram's "Account privacy" screen, laid out to match the real
+// page: a "Who can see your content" section with a "Private account" toggle,
+// and help text that swaps between the public and private descriptions exactly
+// as the live setting does.
 function IgPrivacyMock() {
   const [isPrivate, setPrivate] = useState(false)
 
@@ -26,10 +28,13 @@ function IgPrivacyMock() {
             <span>9:41</span>
             <span>📶&nbsp;&nbsp;🔋</span>
           </div>
+
           <div className="ig-header">
             <span className="ig-back" aria-hidden="true">‹</span>
             <span className="ig-title">Account privacy</span>
           </div>
+
+          <p className="ig-section">Who can see your content</p>
 
           <button
             type="button"
@@ -37,29 +42,23 @@ function IgPrivacyMock() {
             onClick={() => setPrivate((v) => !v)}
             aria-pressed={isPrivate}
           >
-            <span className="ig-row-label">
-              <span className="ig-lock" aria-hidden="true">🔒</span> Private account
-            </span>
+            <span className="ig-row-label">Private account</span>
             <span className={`ig-toggle${isPrivate ? ' is-on' : ''}`} aria-hidden="true">
               <span className="ig-knob" />
             </span>
           </button>
 
           <p className="ig-help">
-            When your account is private, only people you approve can see your photos and
-            videos. Your existing followers won&rsquo;t be affected.
+            {isPrivate
+              ? 'When your account is private, only the followers you approve can see what you share, including your photos or videos on hashtag and location pages, and your followers and following lists. Certain info on your profile, like your profile picture and username, is visible to everyone on and off Instagram.'
+              : "When your account is public, your profile and posts can be seen by anyone, on or off Instagram, even if they don't have an Instagram account."}
           </p>
-
-          {isPrivate && (
-            <div className="ig-confirm" role="status">
-              ✓ Your account is now private — only people you approve can see your posts.
-            </div>
-          )}
         </div>
       </div>
+
       <figcaption className="phone-mock-caption">
         {isPrivate
-          ? '🔒 Done! That single switch is the root fix. (Tap again to compare.)'
+          ? '🔒 Private is on — that single switch is the root fix. (Tap again to compare.)'
           : '👆 Try it — tap the toggle to switch your account to Private.'}
       </figcaption>
     </figure>

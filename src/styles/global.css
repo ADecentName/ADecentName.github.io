@@ -539,6 +539,13 @@ body {
   font-weight: 700;
   font-size: 1rem;
 }
+.ig-section {
+  margin: 0;
+  padding: 16px 16px 8px;
+  color: #a8a8a8;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
 .ig-row {
   display: flex;
   width: 100%;
@@ -587,16 +594,6 @@ body {
   color: #a8a8a8;
   font-size: 0.8rem;
   line-height: 1.45;
-}
-.ig-confirm {
-  margin: 12px 12px 2px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: rgba(0, 149, 246, 0.15);
-  border: 1px solid rgba(0, 149, 246, 0.5);
-  color: #cfe9ff;
-  font-size: 0.82rem;
-  line-height: 1.4;
 }
 .phone-mock-caption {
   margin: 10px 4px 0;
