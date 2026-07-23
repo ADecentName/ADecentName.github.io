@@ -55,12 +55,34 @@ export default function InfoPanel({ scene }) {
         </ul>
       )}
 
+      {(p.extra || []).map((para, i) => (
+        <p key={i} className="info-body">
+          {para}
+        </p>
+      ))}
+
       {p.footer && <p className="info-footer">{p.footer}</p>}
 
       {p.source && (
         <a className="info-source" href={p.source.url} target="_blank" rel="noreferrer">
           Source: {p.source.label} ↗
         </a>
+      )}
+
+      {p.sources && (
+        <div className="info-sources">
+          {p.sources.map((s, i) => (
+            <a
+              key={i}
+              className="info-source"
+              href={s.url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Source: {s.label} ↗
+            </a>
+          ))}
+        </div>
       )}
 
       <div className="info-actions">

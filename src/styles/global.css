@@ -367,6 +367,24 @@ body {
   padding: 4px 12px;
   border-radius: 999px;
 }
+.scene-wip-badge {
+  align-self: stretch;
+  margin-bottom: 10px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 176, 46, 0.16),
+    rgba(255, 176, 46, 0.16) 12px,
+    rgba(255, 176, 46, 0.06) 12px,
+    rgba(255, 176, 46, 0.06) 24px
+  );
+  border: 1px dashed #ffb02e;
+  color: #ffd580;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+}
 
 /* ---------- Info panels (intro / did-you-know / tutorial / resources) ---------- */
 .info-panel {
@@ -470,6 +488,13 @@ body {
   margin-bottom: 16px;
 }
 .info-source:hover { color: var(--primary); }
+.info-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+.info-sources .info-source { margin-bottom: 0; }
 .info-actions {
   display: flex;
   justify-content: flex-end;
@@ -511,6 +536,7 @@ body {
 .dialogue-text {
   margin: 0;
   font-size: 1.12rem;
+  white-space: pre-line;
 }
 
 /* ---------- Choices ---------- */

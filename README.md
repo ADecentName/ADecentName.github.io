@@ -8,8 +8,8 @@ and reveals a themed meter at the end:
 | Chapter | Key action | Scenarios | Meter |
 |---|---|---|---|
 | 🛡️ Taking Control | **Set Boundaries Online** | Public vs private account · password + 2FA · screen-time balance | 🔥 **Boundary Meter** (Privacy · Safety · Wellbeing) |
-| 🧠 Your Digital Footprint | **Think Before You Act** | Oversharing a selfie · e-commerce scam · posting with kindness | 👣 **Digital Footprint Score** (Safety · Citizenship) |
 | 🚩 Stop the Spread | **Report Inappropriate Content** | Shoplifting video · viral fight clip · rumour account | 🌐 **Digital Citizenship Score** (Awareness · Responsibility) |
+| 🧠 Your Digital Footprint | **Think Before You Act** | Oversharing a selfie · e-commerce scam · posting with kindness | 👣 **Digital Footprint Score** (Safety · Citizenship) |
 | 🤝 You Are Not Alone | **Engage & Support** | Scam aftermath · fake AI video of a friend · being cyberbullied | 💚 **Support Score** |
 
 Every scored choice pops a **teaching moment** (safe / could-be-safer / risky, why, and the
@@ -21,9 +21,10 @@ results screen.
 > The four chapters use IMDA's official action names (**Set Boundaries Online · Think Before You
 > Act · Report Inappropriate Content · Engage & Support**), in IMDA's order. IMDA writes the
 > fourth action for parents ("engage & support your child"); here its scenarios are played from a
-> teenager's point of view — supporting a friend, or seeking help yourself. The self-harm branch
-> in the source brief was reframed responsibly as "reach out / retaliate / bottle it up", paired
-> with Singapore helpline resources.
+> teenager's point of view — supporting a friend, or seeking help yourself. The final scenario's
+> four options (reach out · retaliate · bottle it up · turn the hurt inward) follow the source
+> brief, but the self-harm option is written responsibly — no methods, a message that it is not
+> the answer, and an immediate redirect to Singapore crisis helplines and emergency numbers.
 
 ## Run locally
 
