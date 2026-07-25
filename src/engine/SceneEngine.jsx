@@ -51,11 +51,6 @@ export default function SceneEngine() {
       </div>
 
       <div className="scene-bottom">
-        {scene.wip && (
-          <div className="scene-wip-badge" role="status">
-            🚧 Work in progress — this scenario is still being written
-          </div>
-        )}
         {isInfo ? (
           <InfoPanel scene={scene} />
         ) : (
