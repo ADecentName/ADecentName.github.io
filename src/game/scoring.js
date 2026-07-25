@@ -3,7 +3,9 @@
 // A chapter's score for a metric is bounded by the best/worst it is possible
 // to earn on that metric across the chapter's decision scenes. We derive those
 // bounds automatically from scenes.js (sum of the max and min delta available
-// at each scored decision), so content edits stay in one place.
+// at each scored decision), so content edits stay in one place. A scene with
+// `select: n` scores n picks at once, so its bounds take the n best and n
+// worst deltas rather than a single one.
 //
 //   pct = (points - minTotal) / (maxTotal - minTotal) * 100   (clamped 0–100)
 //
@@ -12,6 +14,8 @@
 import scenes from '../data/scenes.js'
 import { CHAPTER_BY_ID, tierFor } from '../data/chapters.js'
 
+const sum = (xs) => xs.reduce((a, x) => a + x, 0)
+
 // Precompute per-chapter, per-metric {min,max} point bounds.
 const BOUNDS = (() => {
   const byChapter = {}
@@ -19,14 +23,19 @@ const BOUNDS = (() => {
     const scored = (scene.choices || []).filter((c) => c.effects)
     if (scored.length === 0) continue
     const ch = (byChapter[scene.chapter] ||= {})
-    // Per metric appearing in this decision, add the best and worst delta.
+    // Per metric appearing in this decision, add the best and worst delta —
+    // or their n-pick sums when the scene asks for more than one answer.
+    const picks = Math.min(scene.select || 1, scored.length)
     const metrics = new Set()
     for (const c of scored) for (const m of Object.keys(c.effects)) metrics.add(m)
     for (const m of metrics) {
       const deltas = scored.map((c) => c.effects[m] || 0)
+      const sorted = [...deltas].sort((a, z) => z - a)
+      const best = sum(sorted.slice(0, picks))
+      const worst = sum(sorted.slice(-picks))
       const b = (ch[m] ||= { min: 0, max: 0 })
-      b.max += Math.max(...deltas, 0)
-      b.min += Math.min(...deltas, 0)
+      b.max += Math.max(best, 0)
+      b.min += Math.min(worst, 0)
     }
   }
   return byChapter

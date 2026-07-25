@@ -59,7 +59,7 @@ const scenes = [
     speaker: 'Phone',
     background: 'app_signup',
     text:
-      "Scenario 1 — Your First Social Media Account 📱\n\nYour friends have been talking about Instagram and TikTok, so you've decided to create your very first account. As you set up your profile, the app asks whether you want your account to be Private or Public. A public account could help you gain more followers — but anyone can view your posts. A private account means only people you approve can see what you share. What would you choose?",
+      "Scenario 1 — Your First Social Media Account 📱\n\nYour friends have been talking about Instagram and TikTok, so you've decided to create your very first account. As you set up your profile, the app asks whether you want your account to be Private or Public.\n\nA public account could help you gain more followers — but anyone can view your posts. A private account means only people you approve can see what you share.\n\nWhat would you choose?",
     choices: [
       {
         label: '🌍 Set your account to Public',
@@ -242,7 +242,7 @@ const scenes = [
     speaker: 'Narrator',
     background: 'bedroom_day',
     text:
-      "Scenario 3 — Managing Screen Time\n\nYou just finished your classes at 2 PM. Your group assignment is due next week and your teammates have scheduled a discussion today. You also need to study for exams next week. At the same time: 🍽️ your family is having dinner tonight, 📱 your favourite TikTok creator has started a 5-hour livestream, 📺 a new 2-hour episode of your favourite show just dropped on YouTube, 🎮 your friends invite you to game online, and ⚽ your friends are playing soccer this evening. How do you spend your day?",
+      "Scenario 3 — Managing Screen Time\n\nYou just finished your classes at 2 PM. Your group assignment is due next week and your teammates have scheduled a discussion today. You also need to study for exams next week.\n\nAt the same time:\n\n🍽️ your family is having dinner tonight,\n📱 your favourite TikTok creator has started a 5-hour livestream,\n📺 a new 2-hour episode of your favourite show just dropped on YouTube,\n🎮 your friends invite you to game online, and\n⚽ your friends are playing soccer this evening.\n\nHow do you spend your day?",
     choices: [
       {
         label:
@@ -343,9 +343,8 @@ const scenes = [
       eyebrow: 'Action 2 · Report Inappropriate Content',
       title: 'Can you stop the spread?',
       body: [
-        'Report Inappropriate Content: recognise online risks and take action to report harmful content.',
-        'Harmful online content spreads every day, but your choices can make a difference. Will you help harmful content spread, or will you stop it?',
-        "Throughout the game, you'll face situations based on real online experiences. Every decision affects your 🧠 Awareness and 🌐 Responsibility. At the end, these scores determine your 🌐 Digital Citizenship Score — revealing how well you recognise harmful online content and take responsible action to create a safer online community.",
+        'Harmful content spreads every day — but your choices can make a difference. Will you help it spread, or stop it?',
+        'Each decision affects your 🧠 Awareness and 🌐 Responsibility. Together they form your Digital Citizenship Score — how well you recognise harmful content and act to create a safer community.',
       ],
     },
     next: 'r_s1',
@@ -356,7 +355,7 @@ const scenes = [
     speaker: 'Narrator',
     background: 'phone_feed',
     text:
-      'Scenario 1 — "It\'s Just a Funny Video... Right?"\n\nWhile scrolling through TikTok after school, you come across a video where an influencer jokes about shoplifting from convenience stores. The creator laughs while showing stolen snacks and captions the video: "Big companies won\'t miss a few dollars. Try it if you\'re broke 😂." The video has over 100,000 likes and comments like "Legend! 😂", "I\'m going to try this," "Nothing will happen," "Free food hack!" You don\'t plan to copy it, but you notice many users praising the video. What do you do?',
+      'Scenario 1 — "It\'s Just a Funny Video... Right?"\n\nWhile scrolling through TikTok after school, you come across a video where an influencer jokes about shoplifting from convenience stores. The creator laughs while showing stolen snacks and captions the video: "Big companies won\'t miss a few dollars. Try it if you\'re broke 😂."\n\nThe video has over 100,000 likes, and the comments are full of praise:\n\n"Legend! 😂"\n"I\'m going to try this."\n"Nothing will happen."\n"Free food hack!"\n\nYou don\'t plan to copy it, but you notice many users praising the video.\n\nWhat do you do?',
     choices: [
       {
         label: "A · Ignore it because you won't copy it.",
@@ -431,7 +430,7 @@ const scenes = [
         feedback: {
           verdict: 'risky',
           note:
-            'TikTok can review the content and take action if it violates its Community Guidelines, such as removing the video or restricting the account. However, because the video appears to show and encourage a criminal offence, it may also require investigation by the relevant authorities. Reporting to both TikTok and the relevant authorities helps address both the online content and any potential real-world harm.',
+            "TikTok can remove the video and restrict the account, but it can't investigate a crime. Since the video shows and encourages a criminal offence, reporting to both the platform and the authorities addresses the online content and the real-world harm.",
           action: 'Report Inappropriate Content',
         },
       },
@@ -444,13 +443,12 @@ const scenes = [
     panel: {
       kind: 'tutorial',
       platform: 'TikTok',
+      tagLabel: 'How to report',
       title: "Let's learn how to report a video on TikTok",
-      steps: [
-        'Tap the Share arrow (➡) on the right of the video.',
-        'Scroll the menu and tap "Report".',
-        'Choose the reason that fits — e.g. "Illegal activities and regulated goods".',
-        'Follow the prompts and submit. Reports are anonymous.',
+      body: [
+        'Do it yourself on the phone below. Tap the share arrow, then "Report", then choose the reason that fits.',
       ],
+      mockup: 'tiktok-report',
       footer:
         'Reporting takes seconds and is completely anonymous — the creator never sees who reported them. It really is that convenient.',
     },
@@ -472,7 +470,7 @@ const scenes = [
         '🧩 Internalisation — they change because they truly believe the behaviour is acceptable.',
       ],
       extra: [
-        'When harmful videos like this shoplifting scenario circulate online, youths may comply by stealing to fit in with what appears to be a popular trend; others may identify with the influencer and imitate their behaviour because they admire or trust them; while some may internalise the message and begin believing that stealing from large companies is harmless or morally acceptable.',
+        'Hence, when harmful videos like this shoplifting scenario circulate online, youths may comply by stealing to fit in with what appears to be a popular trend; others may identify with the influencer and imitate their behaviour because they admire or trust them; while some may internalise the message and begin believing that stealing from large companies is harmless or morally acceptable.',
       ],
       footer:
         "🚨 That's why reporting harmful content matters. Reporting helps remove videos that promote illegal behaviour, which reduces their exposure and limits their influence on others. By reporting, you're helping create a safer online environment.",
@@ -489,7 +487,7 @@ const scenes = [
     speaker: 'Narrator',
     background: 'phone_feed',
     text:
-      'Scenario 2 — "A Viral Fight Video"\n\nWhile you scroll through YouTube, a video appears titled "School Fight in Singapore Caught on Camera! 😱 Watch What Happens Next!" The thumbnail shows one student punching another while a crowd watches and records. The video has over 3 million views, with comments like "Best fight I\'ve seen this year!", "They deserved it," and "Watch until the end!" You\'re curious because so many people have watched it. What do you do?',
+      'Scenario 2 — "A Viral Fight Video"\n\nWhile you scroll through YouTube, a video appears titled "School Fight in Singapore Caught on Camera! 😱 Watch What Happens Next!" The thumbnail shows one student punching another while a crowd watches and records.\n\nThe video has over 3 million views, and the comments include:\n\n"Best fight I\'ve seen this year!"\n"They deserved it."\n"Watch until the end!"\n\nYou\'re curious because so many people have watched it.\n\nWhat do you do?',
     choices: [
       {
         label:
@@ -545,13 +543,12 @@ const scenes = [
     panel: {
       kind: 'tutorial',
       platform: 'YouTube',
+      tagLabel: 'How to report',
       title: "Let's learn how to report an account and video on YouTube",
-      steps: [
-        'Tap the three dots (⋮) below or beside the video.',
-        'Tap "Report".',
-        'Select the reason — e.g. "Violent or repulsive content".',
-        'Add detail if asked, then submit. You can also report the whole channel from its About page.',
+      body: [
+        'Do it yourself on the phone below. Tap the three dots, then "Report", then pick the reason.',
       ],
+      mockup: 'youtube-report',
       footer:
         'Reporting flags the video for human review — it does not tell the uploader who reported it.',
     },
@@ -566,10 +563,10 @@ const scenes = [
       title: 'Violent content changes how we think',
       body: [
         'A study by The Lancet Regional Health – Americas (2023) found that exposure to violent content can reduce empathy and increase aggressive thoughts, anger and aggressive behaviour.',
-        'Moreover, the more time people spend watching violent content on screens, the more likely they are to engage in bullying or cyberbullying.',
+        'The more time people spend watching violent content on screens, the more likely they are to engage in bullying or cyberbullying.',
       ],
       footer:
-        'That is why you need to take action by reporting violent content — it helps reduce its spread and limits the number of people exposed to it. This prevents others from becoming desensitised to violence, reduces the risk of harmful behaviours being normalised, and protects users from the harmful effects identified in the study. It also protects the younger generation, who are particularly vulnerable to being influenced by harmful online content.',
+        '🚨 That is why you need to take action by reporting violent content — it helps reduce its spread and limits the number of people exposed to it. This prevents others from becoming desensitised to violence, reduces the risk of harmful behaviours being normalised, and protects users from the harmful effects identified in the study. It also protects the younger generation, who are particularly vulnerable to being influenced by harmful online content.',
       source: {
         label: 'Screen violence & youth mental health — PMC',
         url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC10025407/',
@@ -583,7 +580,7 @@ const scenes = [
     speaker: 'Narrator',
     background: 'phone_feed',
     text:
-      'Scenario 3 — The Rumour Account\n\nYou come across an account called @SGGirlsTea09. The account regularly posts rumours about Singaporean girls and shares their photos without their consent to publicly humiliate them. Most posts have negative comments, and many users have shared them on their Instagram Stories to spread and support the rumours. Example comments: "I always knew she was fake." "Everyone should unfollow her." "Tag your friends so they know." "Share this so more people know." You\'re unsure whether the rumours are true, but you can see that many people are joining in. What do you do?',
+      'Scenario 3 — The Rumour Account\n\nYou come across an account called @SGGirlsTea09. The account regularly posts rumours about Singaporean girls and shares their photos without their consent to publicly humiliate them. Most posts have negative comments, and many users have shared them on their Instagram Stories to spread and support the rumours.\n\nExample comments:\n\n"I always knew she was fake."\n"Everyone should unfollow her."\n"Tag your friends so they know."\n"Share this so more people know."\n\nYou\'re unsure whether the rumours are true, but you can see that many people are joining in.\n\nWhat do you do?',
     choices: [
       {
         label: 'A · Report the account for bullying and harassment.',
@@ -639,13 +636,12 @@ const scenes = [
     panel: {
       kind: 'tutorial',
       platform: 'Instagram',
+      tagLabel: 'How to report',
       title: "Let's learn how to report an Instagram account",
-      steps: [
-        'Open the profile and tap the three dots (⋯) at the top right.',
-        'Tap "Report".',
-        'Choose "Report account", then a reason — e.g. "Bullying or harassment".',
-        'Follow the prompts and submit. Multiple reports help Instagram review faster.',
+      body: [
+        'Do it yourself on the phone below. Tap the three dots, then "Report", then "Bullying or harassment".',
       ],
+      mockup: 'ig-report',
       footer:
         'Reporting is anonymous — the account owner is never told who reported them.',
     },
@@ -803,7 +799,7 @@ const scenes = [
     speaker: 'Seller',
     background: 'phone_dm',
     text:
-      'Scenario 2 — E-Commerce Scams\n\nYou\'ve been looking for a new pair of Apple AirPods because your current ones stopped working. While scrolling through TikTok Shop, you find a listing for the latest AirPods at S$100 less than the usual retail price. The listing has many positive reviews, so you place an order. A few minutes later, the seller messages: "Hi! To enjoy an extra S$20 discount, let\'s complete the payment through Telegram or WhatsApp instead of TikTok Shop. This helps us avoid platform fees." The deal is tempting and you really need a new pair. What do you do?',
+      'Scenario 2 — E-Commerce Scams\n\nYou\'ve been looking for a new pair of Apple AirPods because your current ones stopped working. While scrolling through TikTok Shop, you find a listing for the latest AirPods at S$100 less than the usual retail price. The listing has many positive reviews, so you place an order.\n\nA few minutes later, the seller messages:\n\n"Hi! To enjoy an extra S$20 discount, let\'s complete the payment through Telegram or WhatsApp instead of TikTok Shop. This helps us avoid platform fees."\n\nThe deal is tempting and you really need a new pair.\n\nWhat do you do?',
     choices: [
       {
         label:
@@ -880,7 +876,7 @@ const scenes = [
     speaker: 'Narrator',
     background: 'phone_feed',
     text:
-      "Scenario 3 — Think Before You Share\n\nYou come across a viral video on Instagram of a man making misogynistic remarks and body-shaming women. The comments are filled with people arguing — some sharing the video to expose his behaviour, others mocking him with insults and hateful comments. You disagree with what he said and want others to know it's wrong. What do you do?",
+      "Scenario 3 — Think Before You Share\n\nYou come across a viral video on Instagram of a man making misogynistic remarks and body-shaming women. The comments are filled with people arguing — some sharing the video to expose his behaviour, others mocking him with insults and hateful comments.\n\nYou disagree with what he said and want others to know it's wrong.\n\nWhat do you do?",
     choices: [
       {
         label:
@@ -987,7 +983,8 @@ const scenes = [
     speaker: 'Reward',
     background: 'phone_dm',
     text:
-      'Scenario 1 — Telegram Scam Link\n\nYou receive a Telegram message from an account using the H&M logo and the display name "H&M Singapore Rewards". The profile looks legitimate. It reads: "🎉 Congratulations! As part of our H&M Singapore Mid-Year Rewards Campaign, you\'ve been selected to receive a FREE S$300 H&M Gift Card! Valid today only. Only the first 100 customers can claim. Tap the link to verify your details and claim your voucher: hm-rewards-sg.com/claim." Excited, you tap the link and enter your personal and banking details to "verify your identity." A few minutes later, you receive a notification that money has been transferred out of your bank account without your permission. What do you do?',
+      'Scenario 1 — Telegram Scam Link\n\nYou receive a Telegram message from an account using the H&M logo and the display name "H&M Singapore Rewards". The profile looks legitimate. It reads: "🎉 Congratulations! As part of our H&M Singapore Mid-Year Rewards Campaign, you\'ve been selected to receive a FREE S$300 H&M Gift Card! Valid today only. Only the first 100 customers can claim. Tap the link to verify your details and claim your voucher: hm-rewards-sg.com/claim." Excited, you tap the link and enter your personal and banking details to "verify your identity." A few minutes later, you receive a notification that money has been transferred out of your bank account without your permission.\n\nWhat do you do? Pick the two best actions.',
+    select: 2,
     choices: [
       {
         label:
@@ -1004,6 +1001,7 @@ const scenes = [
       {
         label: 'B · Share what happened with a trusted family member or friend.',
         next: 's_s1_dyk',
+        correct: true,
         effects: { support: 10 },
         feedback: {
           verdict: 'good',
@@ -1015,6 +1013,7 @@ const scenes = [
       {
         label: 'C · Immediately contact your bank and report the scam to the authorities.',
         next: 's_s1_dyk',
+        correct: true,
         effects: { support: 10 },
         feedback: {
           verdict: 'good',
@@ -1061,7 +1060,7 @@ const scenes = [
     speaker: 'Narrator',
     background: 'phone_feed',
     text:
-      'Scenario 2 — Fake AI Video\n\nSomeone creates an AI-generated fake video of your friend making racist and offensive remarks and shares it on TikTok and Instagram. The video quickly goes viral, and your friend starts receiving hateful comments and threatening messages from strangers. The threats become so severe that your friend is afraid to leave home and no longer wants to attend class. What do you do?',
+      'Scenario 2 — Fake AI Video\n\nSomeone creates an AI-generated fake video of your friend making racist and offensive remarks and shares it on TikTok and Instagram. The video quickly goes viral, and your friend starts receiving hateful comments and threatening messages from strangers.\n\nThe threats become so severe that your friend is afraid to leave home and no longer wants to attend class.\n\nWhat do you do?',
     choices: [
       {
         label: "A · Ignore the situation because it's not your problem.",

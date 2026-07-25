@@ -3,6 +3,7 @@ import TitleScreen from './components/TitleScreen.jsx'
 import Hub from './components/Hub.jsx'
 import SceneEngine from './engine/SceneEngine.jsx'
 import ChapterEndScreen from './components/ChapterEndScreen.jsx'
+import ReflectionScreen from './components/ReflectionScreen.jsx'
 import EndingScreen from './components/EndingScreen.jsx'
 
 // Top-level router: renders one screen based on state.screen.
@@ -18,6 +19,8 @@ export default function App() {
       return <SceneEngine />
     case 'chapterEnd':
       return <ChapterEndScreen />
+    case 'reflection':
+      return <ReflectionScreen />
     case 'ending':
       return <EndingScreen />
     default:

@@ -45,7 +45,7 @@ export default function Hub() {
         <button
           className="btn btn-primary btn-lg"
           disabled={!done}
-          onClick={() => dispatch({ type: 'SHOW_ENDING' })}
+          onClick={() => dispatch({ type: 'SHOW_REFLECTION' })}
         >
           {done
             ? 'See your final results'

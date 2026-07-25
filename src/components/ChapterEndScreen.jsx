@@ -61,7 +61,10 @@ export default function ChapterEndScreen() {
             Back to chapters
           </button>
           {done && (
-            <button className="btn btn-primary" onClick={() => dispatch({ type: 'SHOW_ENDING' })}>
+            <button
+              className="btn btn-primary"
+              onClick={() => dispatch({ type: 'SHOW_REFLECTION' })}
+            >
               See final results →
             </button>
           )}
