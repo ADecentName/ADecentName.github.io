@@ -4,9 +4,9 @@
 //   - an intro (the "action plan" + game theme shown before scenario 1)
 //   - a themed end-of-chapter meter with tier bands
 //
-// IMDA's four key actions:
-//   (1) Set boundaries online   (2) Report inappropriate content
-//   (3) Think before you act     (4) Engage & Support
+// The four key actions, in the order the game presents them:
+//   (1) Set boundaries online   (2) Think before you act
+//   (3) Report inappropriate content   (4) Engage & Support
 // All four keep IMDA's official action names. Action 4, "Engage & Support",
 // is written parent-facing by IMDA; here its scenarios are played from a
 // youth's point of view (support a friend / seek help yourself).
@@ -51,8 +51,42 @@ export const CHAPTERS = [
     },
   },
   {
-    id: 'report',
+    id: 'think',
     order: 2,
+    officialTitle: 'Think Before You Act',
+    chapterTitle: 'Your Digital Footprint',
+    short: 'Be mindful of what you share, spot scams, and post with kindness.',
+    emoji: '🧠',
+    color: '#ffb02e',
+    metrics: ['safety', 'citizenship'],
+    meter: {
+      name: 'Digital Footprint Score',
+      emoji: '👣',
+      tiers: [
+        {
+          min: 0,
+          name: 'Footprint at Risk',
+          band: 'low',
+          desc: 'A few choices revealed too much or reacted in the heat of the moment. Everything you post follows you — pause first.',
+        },
+        {
+          min: 40,
+          name: 'Mindful Poster',
+          band: 'mid',
+          desc: 'You thought twice sometimes. Making the pause automatic keeps your footprint clean and your accounts safe.',
+        },
+        {
+          min: 70,
+          name: 'Digital Role Model',
+          band: 'high',
+          desc: 'You guarded your privacy, dodged the scams, and posted responsibly. Your footprint opens doors, not risks.',
+        },
+      ],
+    },
+  },
+  {
+    id: 'report',
+    order: 3,
     officialTitle: 'Report Inappropriate Content',
     chapterTitle: 'Stop the Spread',
     short: 'Recognise harmful content and take action to report it.',
@@ -86,40 +120,6 @@ export const CHAPTERS = [
           name: 'Digital Guardian',
           band: 'high',
           desc: 'Excellent! You consistently recognised harmful content, refused to spread it, and took action for a safer community.',
-        },
-      ],
-    },
-  },
-  {
-    id: 'think',
-    order: 3,
-    officialTitle: 'Think Before You Act',
-    chapterTitle: 'Your Digital Footprint',
-    short: 'Be mindful of what you share, spot scams, and post with kindness.',
-    emoji: '🧠',
-    color: '#ffb02e',
-    metrics: ['safety', 'citizenship'],
-    meter: {
-      name: 'Digital Footprint Score',
-      emoji: '👣',
-      tiers: [
-        {
-          min: 0,
-          name: 'Footprint at Risk',
-          band: 'low',
-          desc: 'A few choices revealed too much or reacted in the heat of the moment. Everything you post follows you — pause first.',
-        },
-        {
-          min: 40,
-          name: 'Mindful Poster',
-          band: 'mid',
-          desc: 'You thought twice sometimes. Making the pause automatic keeps your footprint clean and your accounts safe.',
-        },
-        {
-          min: 70,
-          name: 'Digital Role Model',
-          band: 'high',
-          desc: 'You guarded your privacy, dodged the scams, and posted responsibly. Your footprint opens doors, not risks.',
         },
       ],
     },

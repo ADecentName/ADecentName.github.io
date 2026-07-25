@@ -7,10 +7,11 @@
 // same next scene, which is usually a "Did You Know?" info panel or a short
 // "how to report" tutorial before the next scenario.
 //
-// This content follows the design brief ("game plan") one-to-one, in its
-// order — Set Boundaries Online, Report Inappropriate Content, Think Before
-// You Act, Engage & Support — keeping every scenario, consequence, bonus
-// question, tutorial and "Did You Know?" fact.
+// This content follows the design brief ("game plan") one-to-one, keeping
+// every scenario, consequence, bonus question, tutorial and "Did You Know?"
+// fact. The chapters play in the order Set Boundaries Online, Think Before
+// You Act, Report Inappropriate Content, Engage & Support — scene ids keep
+// their original prefixes (r_ = report, t_ = think) regardless of position.
 //
 // Scene shapes:
 //   Decision   { id, chapter, speaker, background, text, bonus?,
@@ -340,7 +341,7 @@ const scenes = [
     background: 'phone_feed',
     panel: {
       kind: 'intro',
-      eyebrow: 'Action 2 · Report Inappropriate Content',
+      eyebrow: 'Action 3 · Report Inappropriate Content',
       title: 'Can you stop the spread?',
       body: [
         'Harmful content spreads every day — but your choices can make a difference. Will you help it spread, or stop it?',
@@ -462,7 +463,7 @@ const scenes = [
       kind: 'didYouKnow',
       title: 'Why reporting matters: Social Influence Theory',
       body: [
-        'Did you know that people can be influenced by others? According to Social Influence Theory (Davlembayeva and Papagiannidis, 2026), individuals change their attitudes or behaviours because of the influence of others. When someone is influenced, they usually react in different ways:',
+        'Did you know that people can be influenced by others? According to Social Influence Theory, individuals change their attitudes or behaviours because of the influence of others. When someone is influenced, they usually react in different ways:',
       ],
       bullets: [
         '🫂 Compliance — they change their behaviour to fit in.',
@@ -562,7 +563,7 @@ const scenes = [
       kind: 'didYouKnow',
       title: 'Violent content changes how we think',
       body: [
-        'A study by The Lancet Regional Health – Americas (2023) found that exposure to violent content can reduce empathy and increase aggressive thoughts, anger and aggressive behaviour.',
+        'A study by The Lancet Regional Health – Americas found that exposure to violent content can reduce empathy and increase aggressive thoughts, anger and aggressive behaviour.',
         'The more time people spend watching violent content on screens, the more likely they are to engage in bullying or cyberbullying.',
       ],
       footer:
@@ -654,9 +655,9 @@ const scenes = [
     panel: {
       kind: 'didYouKnow',
       title: 'Cyberbullying is never "just a joke"',
-      stat: 'Victims of cyberbullying are about twice as likely to experience symptoms of mental-health problems as those who have not been cyberbullied (CNA, 2024).',
+      stat: 'Victims of cyberbullying are about twice as likely to experience symptoms of mental-health problems as those who have not been cyberbullied.',
       body: [
-        'Cyberbullying is one of the most common forms of harmful content experienced online (Abdullah, 2024). Globally, studies have found that between 5% and 59% of people have experienced cyberbullying (Fadhli et al., 2022).',
+        'Cyberbullying is one of the most common forms of harmful content experienced online. Globally, studies have found that between 5% and 59% of people have experienced cyberbullying.',
         'Cyberbullying also increases the risk of suicidal thoughts and behaviours. According to the Interpersonal Theory of Suicide, cyberbullying can make victims experience:',
       ],
       bullets: [
@@ -706,7 +707,7 @@ const scenes = [
     background: 'phone_feed',
     panel: {
       kind: 'intro',
-      eyebrow: 'Action 3 · Think Before You Act',
+      eyebrow: 'Action 2 · Think Before You Act',
       title: 'Every post leaves a footprint.',
       body: [
         'Think Before You Act: be mindful of your digital footprint and approach online content with kindness and critical thinking.',
