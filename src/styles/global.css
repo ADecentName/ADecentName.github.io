@@ -30,7 +30,9 @@
 html,
 body,
 #root {
-  height: 100%;
+  /* min-height, not height: a scene taller than the viewport must be able to
+     grow and scroll rather than being cut off at the fold. */
+  min-height: 100%;
   margin: 0;
 }
 
@@ -43,6 +45,9 @@ body {
 
 .screen {
   min-height: 100vh;
+  /* dvh keeps a screen the height of what's actually visible on mobile, so the
+     bottom bar of buttons isn't pushed under the browser chrome. */
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -930,10 +935,15 @@ body {
   position: fixed;
   inset: 0;
   background: rgba(4, 6, 10, 0.72);
-  display: grid;
-  place-items: center;
+  display: flex;
+  justify-content: center;
   padding: 20px;
   z-index: 50;
+  /* A long verdict (multi-answer scenes, "best answers" lists) can be taller
+     than a phone screen — the overlay itself scrolls so Continue is reachable. */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   animation: fade-in 0.15s ease;
 }
 @keyframes fade-in {
@@ -954,6 +964,10 @@ body {
   padding: 24px;
   box-shadow: var(--shadow);
   animation: pop-in 0.2s ease;
+  /* Centres while it fits; once it's taller than the overlay the auto margins
+     collapse and it scrolls from the top instead of being clipped. */
+  margin: auto;
+  flex: 0 0 auto;
 }
 .feedback-modal.is-good {
   border-top-color: var(--good);
@@ -1286,6 +1300,25 @@ body {
     width: 100%;
     margin-left: 0;
     justify-content: space-between;
+  }
+  /* Let the page scroll instead of trapping the Continue button inside a
+     nested scroll area that's easy to miss on touch. */
+  .info-panel {
+    max-height: none;
+    overflow: visible;
+  }
+  /* The sprite was claiming most of the viewport, pushing choices off-screen. */
+  .scene-sprite {
+    font-size: clamp(3.2rem, 13vh, 5.5rem);
+  }
+  .scene-stage {
+    min-height: 0;
+  }
+  .modal-overlay {
+    padding: 12px;
+  }
+  .feedback-modal {
+    padding: 20px 18px;
   }
 }
 
