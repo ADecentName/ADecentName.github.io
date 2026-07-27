@@ -10,11 +10,47 @@
 const EVENTS_TAB = 'events'
 const DASH_TAB = 'dashboard'
 
-// Column indexes in `events` (0-based).
-const C = {
+// Column indexes in `events`, read from the header row rather than assumed —
+// the `test` column was added after the first version of the collector, so a
+// sheet written by the older one has everything shifted one to the left. Read
+// positionally and every row there looks flagged, which reads as "no real
+// player data" when the data is fine.
+const DEFAULT_C = {
   at: 0, sid: 1, test: 2, event: 3, chapter: 4,
   scene: 5, pick: 6, verdict: 7, pct: 8, tier: 9,
   flow: 10, step: 11, ms: 12,
+}
+let C = DEFAULT_C
+
+// Maps header names to indexes. A missing `test` column comes back as -1,
+// which the filters read as "this sheet cannot flag test rows".
+function mapColumns_(header) {
+  const idx = {}
+  header.forEach(function (h, i) {
+    idx[String(h).trim().toLowerCase()] = i
+  })
+  const at = function (name, fallback) {
+    return idx[name] === undefined ? fallback : idx[name]
+  }
+  return {
+    at: at('received_at', 0),
+    sid: at('sid', 1),
+    test: idx.test === undefined ? -1 : idx.test,
+    event: at('event', 2),
+    chapter: at('chapter', 3),
+    scene: at('scene', 4),
+    pick: at('pick', 5),
+    verdict: at('verdict', 6),
+    pct: at('pct', 7),
+    tier: at('tier', 8),
+    flow: at('flow', 9),
+    step: at('step', 10),
+    ms: at('ms_since_load', 11),
+  }
+}
+
+function isTest_(row) {
+  return C.test >= 0 && Boolean(row[C.test])
 }
 
 function onOpen() {
@@ -43,6 +79,11 @@ function deleteTestRows() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(EVENTS_TAB)
   if (!sheet) return
   const values = sheet.getDataRange().getValues()
+  C = mapColumns_(values[0] || [])
+  if (C.test < 0) {
+    SpreadsheetApp.getUi().alert('This sheet has no "test" column — nothing to delete.')
+    return
+  }
   let removed = 0
   for (let i = values.length - 1; i >= 1; i--) {
     if (values[i][C.test]) {
@@ -58,14 +99,28 @@ function buildDashboard_(includeTest) {
   const src = ss.getSheetByName(EVENTS_TAB)
   if (!src) throw new Error('No "' + EVENTS_TAB + '" tab yet — collect some data first.')
 
-  const all = src.getDataRange().getValues().slice(1)
-  const rows = all.filter(function (r) {
-    return r[C.sid] && (includeTest || !r[C.test])
-  })
+  const grid = src.getDataRange().getValues()
+  C = mapColumns_(grid[0] || [])
+
+  const all = grid.slice(1).filter(function (r) { return r[C.sid] })
+  const rows = all.filter(function (r) { return includeTest || !isTest_(r) })
 
   const sheet = resetDash_(ss)
+  let at = 1
+
+  // Say what was found before anything else — an empty report is nearly always
+  // a schema problem, not an absence of players.
+  const note =
+    all.length +
+    ' rows · ' +
+    all.filter(isTest_).length +
+    ' flagged test · ' +
+    (C.test >= 0 ? 'test column found' : 'NO test column — collector is out of date')
+  sheet.getRange(at, 1).setValue(note).setFontColor('#666').setFontSize(9)
+  at += 2
+
   if (!rows.length) {
-    sheet.getRange(1, 1).setValue(
+    sheet.getRange(at, 1).setValue(
       includeTest
         ? 'No data at all yet.'
         : 'No real player data yet — try "Rebuild including test rows".',
@@ -73,7 +128,6 @@ function buildDashboard_(includeTest) {
     return
   }
 
-  let at = 1
   if (includeTest) {
     sheet.getRange(at, 1).setValue('⚠ Includes test rows — not for reporting')
       .setFontColor('#b00').setFontWeight('bold')
