@@ -21,24 +21,64 @@ function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('SafeSteps')
     .addItem('Rebuild dashboard', 'buildDashboard')
+    .addItem('Rebuild including test rows', 'buildDashboardWithTest')
+    .addSeparator()
+    .addItem('Delete all test rows', 'deleteTestRows')
     .addToUi()
 }
 
+// Real players only — this is the one you report from.
 function buildDashboard() {
+  buildDashboard_(false)
+}
+
+// Includes ?test=1 rows, so seeded or hand-made data renders the full report.
+// Use it to check the pipeline and the layout before anyone real has played.
+function buildDashboardWithTest() {
+  buildDashboard_(true)
+}
+
+// Clears seeded/test data once you are done previewing.
+function deleteTestRows() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(EVENTS_TAB)
+  if (!sheet) return
+  const values = sheet.getDataRange().getValues()
+  let removed = 0
+  for (let i = values.length - 1; i >= 1; i--) {
+    if (values[i][C.test]) {
+      sheet.deleteRow(i + 1)
+      removed++
+    }
+  }
+  SpreadsheetApp.getUi().alert('Deleted ' + removed + ' test row(s).')
+}
+
+function buildDashboard_(includeTest) {
   const ss = SpreadsheetApp.getActiveSpreadsheet()
   const src = ss.getSheetByName(EVENTS_TAB)
   if (!src) throw new Error('No "' + EVENTS_TAB + '" tab yet — collect some data first.')
 
   const all = src.getDataRange().getValues().slice(1)
-  const rows = all.filter(function (r) { return !r[C.test] && r[C.sid] })
+  const rows = all.filter(function (r) {
+    return r[C.sid] && (includeTest || !r[C.test])
+  })
 
   const sheet = resetDash_(ss)
   if (!rows.length) {
-    sheet.getRange(1, 1).setValue('No real player data yet (test rows are ignored).')
+    sheet.getRange(1, 1).setValue(
+      includeTest
+        ? 'No data at all yet.'
+        : 'No real player data yet — try "Rebuild including test rows".',
+    )
     return
   }
 
   let at = 1
+  if (includeTest) {
+    sheet.getRange(at, 1).setValue('⚠ Includes test rows — not for reporting')
+      .setFontColor('#b00').setFontWeight('bold')
+    at += 2
+  }
   at = writeHeadline_(sheet, at, rows)
   at = writeFunnel_(sheet, at, rows)
   at = writeAccuracy_(sheet, at, rows)
