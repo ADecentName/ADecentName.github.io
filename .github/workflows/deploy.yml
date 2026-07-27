@@ -39,6 +39,11 @@ jobs:
       - name: Build
         # User/org sites (<login>.github.io) serve from root "/"; project
         # sites serve from "/<repo-name>/". Pick the right base accordingly.
+        #
+        # ANALYTICS_URL is optional: unset, the build ships with counters
+        # disabled and the game posts nothing. See docs/analytics.md.
+        env:
+          VITE_ANALYTICS_URL: ${{ secrets.ANALYTICS_URL }}
         run: |
           name="${{ github.event.repository.name }}"
           if [[ "$name" == *.github.io ]]; then
