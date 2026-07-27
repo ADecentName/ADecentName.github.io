@@ -26,6 +26,9 @@ results screen.
 > brief, but the self-harm option is written responsibly — no methods, a message that it is not
 > the answer, and an immediate redirect to Singapore crisis helplines and emergency numbers.
 
+New to the project? Start with **[HANDOVER.md](HANDOVER.md)** — status, the data
+pipeline, the pitch-video plan, and the things that will bite you.
+
 ## Run locally
 
 ```bash
