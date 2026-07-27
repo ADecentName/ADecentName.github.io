@@ -1,21 +1,37 @@
 import { useState } from 'react'
+import { track } from '../analytics.js'
 
 // Stylised imitations of real app screens, used purely as educational
 // walkthroughs inside the game. They don't connect to anything — no login, no
 // data — they just show the player where a real setting lives and let them
 // navigate to it themselves.
+//
+// How far a player gets through these is the one number that shows they
+// *rehearsed* the action rather than read about it, so each step is counted
+// anonymously (see src/analytics.js).
 export default function PhoneMock({ kind }) {
-  if (kind === 'ig-privacy') return <IgPrivacyMock />
-  if (REPORT_FLOWS[kind]) return <ReportMock flow={REPORT_FLOWS[kind]} />
+  if (kind === 'ig-privacy') return <IgPrivacyMock kind={kind} />
+  if (REPORT_FLOWS[kind]) return <ReportMock flow={REPORT_FLOWS[kind]} kind={kind} />
   return null
 }
 
 // A navigable mock of the real path to going private on Instagram:
 //   Profile  →  (menu)  →  Settings and activity  →  Account privacy  →  toggle
-function IgPrivacyMock() {
+function IgPrivacyMock({ kind }) {
   // 'profile' | 'settings' | 'privacy' | 'visitor'
   const [screen, setScreen] = useState('profile')
   const [isPrivate, setPrivate] = useState(false)
+
+  // Count each screen reached once, and the toggle itself as the completion.
+  const go = (next) => {
+    if (next !== screen) track('tutorial_step', { flow: kind, step: next })
+    setScreen(next)
+  }
+  // Note: no side effect inside the updater — React re-runs those in dev.
+  const toggle = () => {
+    if (!isPrivate) track('tutorial_complete', { flow: kind })
+    setPrivate((v) => !v)
+  }
 
   const goBack = () =>
     setScreen(
@@ -45,16 +61,16 @@ function IgPrivacyMock() {
             </span>
           </div>
 
-          {screen === 'profile' && <ProfileScreen onMenu={() => setScreen('settings')} />}
+          {screen === 'profile' && <ProfileScreen onMenu={() => go('settings')} />}
           {screen === 'settings' && (
-            <SettingsScreen onBack={goBack} onPrivacy={() => setScreen('privacy')} />
+            <SettingsScreen onBack={goBack} onPrivacy={() => go('privacy')} />
           )}
           {screen === 'privacy' && (
             <PrivacyScreen
               onBack={goBack}
               isPrivate={isPrivate}
-              onToggle={() => setPrivate((v) => !v)}
-              onSeeVisitor={() => setScreen('visitor')}
+              onToggle={toggle}
+              onSeeVisitor={() => go('visitor')}
             />
           )}
           {screen === 'visitor' && <VisitorScreen onBack={goBack} />}
@@ -364,7 +380,7 @@ const REPORT_FLOWS = {
 }
 
 // Drives one report flow: content → menu → reason → receipt.
-function ReportMock({ flow }) {
+function ReportMock({ flow, kind }) {
   const [step, setStep] = useState(0) // 0 content · 1 sheet · 2 reasons · 3 done
   const Content = flow.content
   const captions = [
@@ -375,7 +391,11 @@ function ReportMock({ flow }) {
   ]
 
   const back = () => setStep((s) => Math.max(0, s - 1))
-  const next = () => setStep((s) => s + 1)
+  const next = () => {
+    const to = step + 1
+    track(to === 3 ? 'tutorial_complete' : 'tutorial_step', { flow: kind, step: to })
+    setStep(to)
+  }
 
   return (
     <figure className="phone-guide">
