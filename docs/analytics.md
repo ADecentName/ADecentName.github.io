@@ -186,7 +186,33 @@ you the failure — so debug from the other end:
   events, or when the tab is hidden or closed. Do not expect a row the instant
   you click something.
 
-## Reading it
+## Reading it — the dashboard tab
+
+Raw event rows are unreadable by design; the aggregation lives in
+[`dashboard.gs`](dashboard.gs). Paste it into the **same** Apps Script project
+as the collector (**Extensions → Apps Script → +** next to Files **→ Script**,
+name it `Dashboard`), save, then reload the Sheet. A **SafeSteps → Rebuild
+dashboard** menu appears; run it whenever you want fresh numbers.
+
+It writes a `dashboard` tab with five blocks, ignoring every `?test=1` row:
+
+- **Headline** — players, finish rate, and report-walkthrough completion rate.
+  These are the three numbers for the slide.
+- **Drop-off** — players reaching each scene, ordered by where it falls in a
+  typical run, with the single worst drop highlighted in red. That scene is the
+  one to rewrite.
+- **First-attempt correct rate** — per scenario, counting only each player's
+  *first* answer, colour-coded red/amber/green. A low rate means the scenario
+  taught something they did not already know; a high rate means it is too easy
+  to be worth its slot.
+- **Walkthroughs** — started vs completed per flow, with a chart. This is the
+  root-cause-3 number.
+- **Chapters** — completions, average meter, and the tier spread.
+
+To keep it current without clicking: **Triggers** (clock icon in Apps Script) →
+**Add trigger** → `buildDashboard`, time-driven, daily.
+
+### Doing it by hand instead
 
 Make a second tab and point these at `events`. Two hundred players is a few
 thousand rows — well inside what a Sheet handles.
