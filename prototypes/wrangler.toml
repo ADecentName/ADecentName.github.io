@@ -1,0 +1,29 @@
+# Second Worker, separate from the game.
+#
+# Kept separate on purpose: a Worker has one asset store, so serving both sites
+# from `safesteps` would mean merging two builds into one directory and routing
+# by hostname in code. That couples them — a broken prototype build could take
+# down the game, and every prototype tweak would redeploy what students use.
+#
+# Assets-only: there is no `main`, because nothing here runs code. Add one (and
+# set not_found_handling = "none") if this ever needs an API.
+#
+# Deploy with:  npx wrangler deploy   (from this directory)
+
+name = "safesteps-prototypes"
+compatibility_date = "2025-01-15"
+
+# Top-level keys must appear BEFORE any [table] header — TOML assigns every key
+# after a header to that table, so moving these below [assets] breaks them
+# silently.
+routes = [
+  { pattern = "prototypes.safe-steps.uk", custom_domain = true }
+]
+
+# Declaring `routes` flips wrangler's default for workers.dev to disabled, which
+# 404s the fallback URL with no error. Keep it on.
+workers_dev = true
+
+[assets]
+directory = "./public"
+not_found_handling = "404-page"

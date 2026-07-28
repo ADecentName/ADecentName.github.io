@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>SafeSteps — Prototypes</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --page-bg: #f7f6f3;
+    --page-fg: #191714;
+    --page-muted: #6b655c;
+    --page-line: #e2ded5;
+    --card-bg: #ffffff;
+
+    /* Instagram dark-mode surface, fixed regardless of viewer theme —
+       the mock is a dark-mode screenshot recreation. */
+    --ig-bg: #000000;
+    --ig-fg: #fafafa;
+    --ig-muted: #a8a8a8;
+    --ig-line: #262626;
+    --ig-link: #6c8ff5;
+    --ig-submit: #4f46e5;
+    --ig-red: #ed4956;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page-bg: #131210;
+      --page-fg: #f2efe9;
+      --page-muted: #9a938a;
+      --page-line: #2a2721;
+      --card-bg: #1b1917;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2.5rem 1.25rem 4rem;
+    background: var(--page-bg);
+    color: var(--page-fg);
+    font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 60rem; margin: 0 auto; }
+
+  header.page { margin-bottom: 2.5rem; }
+  .tag {
+    display: inline-block;
+    margin-bottom: .9rem;
+    padding: .2rem .6rem;
+    border: 1px solid var(--page-line);
+    border-radius: 999px;
+    font-size: .7rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--page-muted);
+  }
+  h1 {
+    margin: 0 0 .6rem;
+    font-size: clamp(1.6rem, 4vw, 2.15rem);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .lede { margin: 0 0 1rem; max-width: 44rem; color: var(--page-muted); }
+  .disclaimer {
+    max-width: 44rem;
+    padding: .7rem .9rem;
+    border-left: 2px solid var(--page-line);
+    font-size: .85rem;
+    color: var(--page-muted);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .proto h2 {
+    margin: 0 0 .3rem;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+  }
+  .proto .sub {
+    margin: 0 0 1.1rem;
+    font-size: .85rem;
+    color: var(--page-muted);
+  }
+
+  /* ---------- phone shell ---------- */
+  .phone {
+    width: 100%;
+    max-width: 335px;
+    aspect-ratio: 9 / 19;
+    margin: 0 auto;
+    background: var(--ig-bg);
+    color: var(--ig-fg);
+    border: 1px solid #2f2f2f;
+    border-radius: 26px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    line-height: 1.45;
+    box-shadow: 0 12px 32px rgba(0,0,0,.28);
+  }
+
+  .statusbar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .55rem .85rem .3rem;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .statusbar .right { display: flex; align-items: center; gap: 4px; }
+  .battery {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 12px;
+    padding: 0 3px;
+    border: 1px solid var(--ig-muted);
+    border-radius: 3px;
+    font-size: 8px;
+    font-weight: 700;
+    color: var(--ig-muted);
+  }
+  .statusbar svg { display: block; }
+
+  .ig-header {
+    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: 24px 1fr 24px;
+    align-items: center;
+    gap: .7rem;
+    padding: .6rem .85rem .75rem;
+    border-bottom: 1px solid var(--ig-line);
+  }
+  .ig-header .title { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+
+  .screen { flex: 1 1 auto; display: flex; flex-direction: column; padding: 0 1.05rem; overflow: hidden; }
+
+  /* ---------- prototype 1: report confirmation ---------- */
+  .r-lead { margin: 1.5rem 0 .5rem; text-align: center; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+  .r-sub { margin: 0 0 1.9rem; text-align: center; font-size: 12.5px; color: var(--ig-muted); }
+  .r-sub a { color: var(--ig-link); text-decoration: none; font-weight: 500; }
+  .r-section { font-size: 14px; font-weight: 700; margin: 0 0 .85rem; }
+  .r-q { font-size: 13.5px; font-weight: 600; margin: 0; }
+  .r-a { font-size: 12.5px; color: var(--ig-muted); margin: 0 0 1.05rem; }
+
+  /* the added control */
+  .r-check {
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+    margin-top: 1.15rem;
+    padding-top: 1.15rem;
+    border-top: 1px solid var(--ig-line);
+  }
+  .box {
+    flex: 0 0 auto;
+    width: 17px; height: 17px;
+    margin-top: 1px;
+    border-radius: 4px;
+    background: var(--ig-submit);
+    display: grid;
+    place-items: center;
+  }
+  .box svg { display: block; }
+  .r-check .label { font-size: 12.5px; }
+  .r-check .label .hint { display: block; color: var(--ig-muted); font-size: 11.5px; }
+
+  .submit {
+    flex: 0 0 auto;
+    margin: auto 0 1.2rem;
+    padding: .72rem;
+    background: var(--ig-submit);
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 11px;
+  }
+
+  /* ---------- prototype 2: post action bar ---------- */
+  .feed { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; }
+  .post-head {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .55rem .85rem;
+  }
+  .avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b4a6b, #6b3b5a);
+    display: grid; place-items: center;
+    font-size: 10px; font-weight: 700; color: #fff;
+    letter-spacing: -0.02em;
+  }
+  .handle { font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+  .post-head .menu { margin-left: auto; }
+
+  .media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background:
+      linear-gradient(135deg, #2b2f36 0%, #3a3f47 45%, #24272c 100%);
+    display: grid;
+    place-items: center;
+  }
+  .media .ph {
+    font-size: 10.5px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: #8b9099;
+  }
+  .counter {
+    position: absolute;
+    top: .55rem; right: .55rem;
+    padding: .12rem .45rem;
+    background: rgba(0,0,0,.6);
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 600;
+  }
+  .dots { display: flex; justify-content: center; gap: 4px; padding: .6rem 0 .1rem; }
+  .dots i { width: 5px; height: 5px; border-radius: 50%; background: #3c3c3c; }
+  .dots i.on { background: #3897f0; }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: .95rem;
+    padding: .5rem .85rem .7rem;
+  }
+  .actions .likes { font-size: 12.5px; font-weight: 600; margin-left: -.55rem; }
+  .actions .spacer { margin-left: auto; }
+  .report-btn { color: var(--ig-red); }
+
+  /* ---------- callouts ---------- */
+  .callouts { margin: 1.15rem 0 0; padding: 0; list-style: none; font-size: .86rem; }
+  .callouts li {
+    position: relative;
+    padding-left: 1.4rem;
+    margin-bottom: .5rem;
+    color: var(--page-muted);
+  }
+  .callouts li::before {
+    content: "";
+    position: absolute;
+    left: .25rem; top: .55rem;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--ig-red);
+  }
+  .callouts li b { color: var(--page-fg); font-weight: 600; }
+
+  footer.page {
+    margin-top: 3.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--page-line);
+    font-size: .85rem;
+    color: var(--page-muted);
+  }
+  footer.page a { color: inherit; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page">
+    <span class="tag">Prototypes</span>
+    <h1>Making reporting easier to reach, and easier to credit</h1>
+    <p class="lede">
+      Two static mockups exploring changes to Instagram's reporting flow: adding a
+      SafeSteps attribution to the report confirmation screen, and lifting the
+      report action onto the post itself instead of burying it two menus deep.
+    </p>
+    <p class="disclaimer">
+      Unofficial design mockups for a student project. Not affiliated with,
+      endorsed by, or connected to Instagram or Meta. Nothing here is functional —
+      no form submits, and no data is collected.
+    </p>
+  </header>
+
+  <div class="grid">
+
+    <!-- ============ PROTOTYPE 1 ============ -->
+    <section class="proto">
+      <h2>1 — Report confirmation, with attribution</h2>
+      <p class="sub">Recreation of the existing confirmation screen, plus one new checkbox.</p>
+
+      <div class="phone">
+        <div class="statusbar">
+          <span>6:56</span>
+          <span class="right">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#a8a8a8" stroke-width="2.4" stroke-linecap="round"><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>
+            <svg width="12" height="11" viewBox="0 0 24 24" fill="none" stroke="#a8a8a8" stroke-width="2.4" stroke-linecap="round"><path d="M3 3l18 18M8 5h8l2 9H6z"/></svg>
+            <svg width="13" height="11" viewBox="0 0 24 24" fill="none" stroke="#fafafa" stroke-width="2.4" stroke-linecap="round"><path d="M2 8.5a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16.5a5 5 0 0 1 6 0"/><circle cx="12" cy="20" r="1" fill="#fafafa"/></svg>
+            <svg width="13" height="11" viewBox="0 0 24 24" fill="none" stroke="#fafafa" stroke-width="2.6" stroke-linecap="round"><path d="M3 20v-3M9 20v-7M15 20v-11M21 20V6"/></svg>
+            <span class="battery">45</span>
+          </span>
+        </div>
+
+        <div class="ig-header">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span class="title">Report</span>
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </div>
+
+        <div class="screen">
+          <p class="r-lead">You're about to submit a report</p>
+          <p class="r-sub">
+            We only remove content that goes against our
+            <a href="#" onclick="return false">Community Standards.</a>
+          </p>
+
+          <p class="r-section">Report details</p>
+
+          <p class="r-q">Why are you reporting this post?</p>
+          <p class="r-a">Violence, hate or exploitation</p>
+
+          <p class="r-q">How is it violence, hate or exploitation?</p>
+          <p class="r-a">Animal abuse</p>
+
+          <div class="r-check">
+            <span class="box">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </span>
+            <span class="label">
+              Report submitted because of SafeSteps
+              <span class="hint">Helps us measure whether safety education leads to reporting.</span>
+            </span>
+          </div>
+
+          <div class="submit">Submit</div>
+        </div>
+      </div>
+
+      <ul class="callouts">
+        <li><b>New checkbox</b> above the Submit button, checked by default when the user arrives from SafeSteps.</li>
+        <li>Everything else is a faithful copy of the current screen — same copy, same hierarchy, same Submit button.</li>
+        <li>Gives a measurable link between playing SafeSteps and actually reporting something.</li>
+      </ul>
+    </section>
+
+    <!-- ============ PROTOTYPE 2 ============ -->
+    <section class="proto">
+      <h2>2 — Report from the post itself</h2>
+      <p class="sub">A red report action added to the left of Save, in the post action bar.</p>
+
+      <div class="phone">
+        <div class="statusbar">
+          <span>6:56</span>
+          <span class="right">
+            <svg width="13" height="11" viewBox="0 0 24 24" fill="none" stroke="#fafafa" stroke-width="2.4" stroke-linecap="round"><path d="M2 8.5a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16.5a5 5 0 0 1 6 0"/><circle cx="12" cy="20" r="1" fill="#fafafa"/></svg>
+            <svg width="13" height="11" viewBox="0 0 24 24" fill="none" stroke="#fafafa" stroke-width="2.6" stroke-linecap="round"><path d="M3 20v-3M9 20v-7M15 20v-11M21 20V6"/></svg>
+            <span class="battery">45</span>
+          </span>
+        </div>
+
+        <div class="feed">
+          <div class="post-head">
+            <span class="avatar">SS</span>
+            <span class="handle">
+              safesteps.demo
+              <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#3897f0"/><path d="M17 9.5 10.8 15.6 7.5 12.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <svg class="menu" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </div>
+
+          <div class="media">
+            <span class="ph">photo placeholder</span>
+            <span class="counter">2/7</span>
+          </div>
+
+          <div class="dots">
+            <i></i><i class="on"></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="actions">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span class="likes">23</span>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1.5l4 4-4 4M21 5.5H7a4 4 0 0 0-4 4v1M7 22.5l-4-4 4-4M3 18.5h14a4 4 0 0 0 4-4v-1"/></svg>
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>
+
+            <span class="spacer"></span>
+
+            <!-- NEW: report action, immediately left of Save -->
+            <svg class="report-btn" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M12 7.4v5.2"/><circle cx="12" cy="16.4" r="1.05" fill="currentColor" stroke="none"/></svg>
+
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <ul class="callouts">
+        <li><b>New red report button</b> sits directly left of Save — one tap, in the same row users already use.</li>
+        <li>Today reporting is behind the <b>⋯ menu → Report</b>, which is two taps and a menu most people never open.</li>
+        <li>Red distinguishes it from the neutral engagement actions without competing with the Like heart.</li>
+      </ul>
+    </section>
+
+  </div>
+
+  <footer class="page">
+    SafeSteps prototypes · the game itself lives at <a href="https://safe-steps.uk">safe-steps.uk</a>
+  </footer>
+
+</div>
+</body>
+</html>
