@@ -2,6 +2,20 @@ name = "safesteps"
 main = "src/index.js"
 compatibility_date = "2025-01-15"
 
+# The custom domain. `custom_domain = true` tells Cloudflare to create the DNS
+# record and issue the TLS certificate on deploy, so the hostname is declared
+# in version control instead of existing only as a dashboard click that a fresh
+# clone would not reproduce. The workers.dev URL keeps working alongside it.
+routes = [
+  { pattern = "safe-steps.uk", custom_domain = true }
+]
+
+# Declaring `routes` flips wrangler's default for workers.dev to disabled, which
+# silently 404s the safesteps.<subdomain>.workers.dev URL. Keep it on: it is the
+# fallback when the custom domain or its DNS misbehaves, and the runbook's
+# checkpoints use it.
+workers_dev = true
+
 # The Worker serves the built site as well as the API, so the game, the dashboard
 # page and /collect all share one origin. That is not just tidier — same-origin
 # means there is no CORS to get wrong, and one deploy instead of two.
@@ -23,7 +37,7 @@ crons = ["0 * * * *"]
 [[d1_databases]]
 binding = "DB"
 database_name = "safesteps"
-database_id = "PUT_YOUR_D1_DATABASE_ID_HERE"
+database_id = "6c719623-bd58-4662-a356-93e061ced2d4"
 
 [vars]
 # How long a session must be quiet before it is aggregated. Longer than the
