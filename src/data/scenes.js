@@ -1134,7 +1134,6 @@ const scenes = [
   {
     id: 's_s3',
     chapter: 'support',
-    wip: true,
     speaker: 'Narrator',
     background: 'phone_dm',
     text:
@@ -1189,7 +1188,6 @@ const scenes = [
   {
     id: 's_s3_dyk',
     chapter: 'support',
-    wip: true,
     background: 'phone_dm',
     panel: {
       kind: 'resources',
