@@ -41,7 +41,9 @@ cd worker && npm test              # the analytics aggregation checks
 
 Push to `main` and GitHub Actions builds, tests, migrates and deploys the Worker
 automatically (`.github/workflows/deploy.yml`). Nothing else to do — but the
-**first** deploy needs a one-time Cloudflare setup: `worker/README.md` §1.
+**first** deploy needs a one-time Cloudflare setup. Follow
+[`docs/cloudflare-setup.md`](docs/cloudflare-setup.md) top to bottom; it covers the
+account, the database, the domain, both verification passes and the CI secrets.
 
 ---
 
@@ -66,6 +68,7 @@ scripts/
   capture-clips.mjs      drives a filmable playthrough for the video (§6)
   seed-analytics.mjs     posts fake sessions so the dashboard can be tested (§5)
 docs/
+  cloudflare-setup.md    first-time deploy runbook — start here if nothing is live
   analytics.md           the counters: what they collect, how to read them
   dashboard.gs           LEGACY Apps Script aggregator, superseded by worker/
   pitch-video-plan.md    the 60-second video: shot list, script, capture notes

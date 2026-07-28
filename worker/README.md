@@ -39,6 +39,11 @@ unanswerable. **Add a metric before the data it needs is purged**, not after.
 
 ## 1. First-time setup
 
+> **For a first deploy, follow [`../docs/cloudflare-setup.md`](../docs/cloudflare-setup.md)
+> instead** — it is the same steps plus the account setup, the domain, the
+> verification passes and the CI wiring, in order, with checkpoints. What follows
+> here is the short version for someone who already knows the platform.
+
 You need a Cloudflare account (free, no card). No domain required — see §7 for the
 one reason you may want one anyway.
 
