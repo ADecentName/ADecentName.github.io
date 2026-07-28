@@ -20,7 +20,12 @@
 //   node scripts/capture-clips.mjs     # OBS mode: hit record when prompted
 //   MODE=video node scripts/capture-clips.mjs
 //   SPEED=4 node scripts/capture-clips.mjs        # fast rehearsal, unfilmable
-//   URL=https://adecentname.github.io/ node scripts/capture-clips.mjs
+//   URL=https://safe-steps.uk/ node scripts/capture-clips.mjs
+//   DASHBOARD_KEY=… node scripts/capture-clips.mjs   # also records clip N
+//
+// Clip N (the dashboard) is skipped unless DASHBOARD_KEY is set. Pass it in the
+// environment, never on the command line in a shared shell — the key is seeded
+// straight into localStorage so it never appears in a URL or on screen.
 //
 // Both modes assume a 1920x1080 display. In OBS mode the browser runs kiosk
 // (no tab bar, no URL bar); a white full-frame flash marks t=0 so the markers
@@ -35,6 +40,8 @@ const URL = process.env.URL ?? 'http://localhost:5173/'
 const MODE = process.env.MODE ?? 'obs' // 'obs' | 'video'
 const SPEED = Number(process.env.SPEED ?? 1)
 const OUT = 'capture'
+// Clip N only. Empty means "skip the dashboard" — the game clips do not need it.
+const DASHBOARD_KEY = process.env.DASHBOARD_KEY ?? ''
 
 // Dwell times, in ms before SPEED is applied. These are the pacing of the
 // footage — the edit can always speed a beat up, but it cannot slow down a
@@ -173,15 +180,35 @@ const browser = await chromium.launch({
       : ['--window-position=0,0'],
 })
 
+// `deviceScaleFactor` may only be passed alongside an explicit viewport —
+// Playwright throws if it is combined with `viewport: null`. External-recorder
+// mode wants the real window (null) so kiosk fills whatever display you have, so
+// the two options have to be set as a pair, not merged.
 const context = await browser.newContext({
-  viewport: MODE === 'obs' ? null : { width: 1920, height: 1080 },
-  deviceScaleFactor: 1,
+  ...(MODE === 'obs'
+    ? { viewport: null }
+    : { viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 }),
   ...(MODE === 'video'
     ? { recordVideo: { dir: join(OUT, 'raw'), size: { width: 1920, height: 1080 } } }
     : {}),
 })
 
 await context.addInitScript(installCursor)
+
+// Playwright starts from a clean profile, so the key saved in your everyday
+// Chrome is not here. Seed it for this origin before any page loads: the
+// dashboard reads localStorage first, so it opens without a prompt and the key
+// never appears in a URL, in the address bar, or in the recording.
+if (DASHBOARD_KEY) {
+  await context.addInitScript((k) => {
+    try {
+      localStorage.setItem('ss_dashboard_key', k)
+    } catch {
+      /* private mode — the dashboard will just ask */
+    }
+  }, DASHBOARD_KEY)
+}
+
 const page = await context.newPage()
 await page.goto(URL, { waitUntil: 'networkidle' })
 await page.waitForSelector('.title-screen')
@@ -229,6 +256,19 @@ async function revealRest(l) {
     await page.waitForTimeout(ms(160))
   }
   await page.waitForTimeout(ms(T.readShort))
+}
+
+// The dashboard scrolls the window, not an inner element, so revealRest cannot
+// drive it.
+async function scrollPageSlowly() {
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollHeight - window.innerHeight,
+  )
+  if (overflow <= 8) return
+  for (let done = 0; done < overflow; done += 90) {
+    await page.mouse.wheel(0, 90)
+    await page.waitForTimeout(ms(160))
+  }
 }
 
 // --- game-aware steps -----------------------------------------------------
@@ -389,6 +429,35 @@ mark('J · final four meters', 'in')
 await revealRest(loc('.results-screen'))
 await page.waitForTimeout(ms(T.meter))
 mark('J · final four meters', 'out')
+
+// Clip N — the dashboard. Not the game: this is the measurement proof, and the
+// only clip needing a credential. Left last on purpose, so a rejected key costs
+// you nothing — every game clip is already recorded by this point.
+if (DASHBOARD_KEY) {
+  // `URL` here is the string from the environment, which shadows the global URL
+  // constructor — build the path by hand rather than with `new URL()`.
+  const dashUrl = `${URL.endsWith('/') ? URL : `${URL}/`}dashboard/`
+  await page.goto(dashUrl, { waitUntil: 'networkidle' })
+
+  // `.dash-head` only renders once a key is accepted; `.keyform` means it wasn't.
+  const unlocked = await page
+    .waitForSelector('.dash-head', { timeout: 15000 })
+    .then(() => true)
+    .catch(() => false)
+
+  if (unlocked) {
+    mark('N · dashboard', 'in')
+    await page.waitForTimeout(ms(T.readLong))
+    await scrollPageSlowly()
+    await page.waitForTimeout(ms(T.readShort))
+    mark('N · dashboard', 'out')
+  } else {
+    console.log('\n  ⚠ dashboard did not unlock — key rejected or /dashboard.json 401.')
+    console.log('    Clip N skipped. Every game clip above is unaffected.\n')
+  }
+} else {
+  console.log('\n  ⓘ DASHBOARD_KEY not set — clip N skipped. Game clips unaffected.\n')
+}
 
 // --- write markers --------------------------------------------------------
 
