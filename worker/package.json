@@ -1,0 +1,19 @@
+{
+  "name": "safesteps-analytics-worker",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "SafeSteps analytics — Cloudflare Worker + D1 collector, hourly aggregation, raw-event purge",
+  "scripts": {
+    "test": "node test/aggregate.test.mjs",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "migrate:local": "wrangler d1 migrations apply safesteps --local",
+    "migrate": "wrangler d1 migrations apply safesteps --remote",
+    "tail": "wrangler tail",
+    "aggregate:local": "wrangler dev --test-scheduled"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}

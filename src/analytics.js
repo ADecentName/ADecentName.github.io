@@ -27,7 +27,7 @@ let timer = null
 
 // Playing the live site to check the pipeline would otherwise land in the same
 // rows as real players. Add ?test=1 to the URL and every event from that tab is
-// flagged, so the Sheet can filter your own runs out of the numbers.
+// flagged; flagged rows are purged like any other but never counted.
 const IS_TEST = (() => {
   try {
     return new URLSearchParams(location.search).has('test') ? 1 : ''
@@ -67,13 +67,21 @@ export function flush() {
   const body = JSON.stringify({ sid, test: IS_TEST, events: queue.splice(0, queue.length) })
 
   // `keepalive` lets the request outlive the page, which is what navigator
-  // .sendBeacon is usually for — but a Google Apps Script endpoint answers with
-  // a redirect, and a beacon drops the body when it follows one. Plain fetch
-  // follows it properly. `no-cors` because we never read the response, and
-  // text/plain keeps it a "simple" request with no CORS preflight.
+  // .sendBeacon is usually for — but a beacon gives no way to see a failure, and
+  // plain fetch does.
+  //
+  // `mode: 'cors'` is deliberate. The old Apps Script endpoint answered with a
+  // redirect and no CORS headers, so this had to be `no-cors` — which made every
+  // failure invisible in the browser console and forced debugging from the server
+  // side. The Worker returns proper `access-control-allow-origin`, so errors now
+  // surface where you would expect them. `text/plain` keeps it a "simple" request
+  // with no preflight round-trip on the pagehide path.
+  //
+  // If you ever point VITE_ANALYTICS_URL back at an Apps Script /exec URL, this
+  // must go back to `no-cors` or every post will fail.
   fetch(ENDPOINT, {
     method: 'POST',
-    mode: 'no-cors',
+    mode: 'cors',
     keepalive: true,
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body,

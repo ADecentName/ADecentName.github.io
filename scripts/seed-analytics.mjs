@@ -4,8 +4,9 @@
 // the dashboard looks like with real volume, before real players exist.
 //
 // Every event it sends is flagged `test: 1`, so it never touches the reported
-// numbers: rebuild with **SafeSteps → Rebuild including test rows** to view it,
-// and **SafeSteps → Delete all test rows** to clear it out afterwards.
+// numbers — flagged rows are purged like any other but never counted. To view
+// them, set AGGREGATE_TEST_ROWS = "true" in worker/wrangler.toml, redeploy, and
+// reset the aggregates afterwards. See worker/README.md §5.
 //
 // The sessions walk the actual scene graph in src/data/scenes.js — real scene
 // ids, real choice verdicts, real walkthrough flows — so the dashboard renders
@@ -13,7 +14,7 @@
 //
 // Use:
 //   node scripts/seed-analytics.mjs 40        # 40 sessions
-//   URL=…/exec node scripts/seed-analytics.mjs 40
+//   URL=https://…workers.dev/collect node scripts/seed-analytics.mjs 40
 //
 // With no URL it reads VITE_ANALYTICS_URL out of .env.local.
 
@@ -35,7 +36,7 @@ const endpoint = await (async () => {
 })()
 
 if (!endpoint) {
-  console.error('No endpoint. Pass URL=…/exec or put VITE_ANALYTICS_URL in .env.local')
+  console.error('No endpoint. Pass URL=…/collect or put VITE_ANALYTICS_URL in .env.local')
   process.exit(1)
 }
 

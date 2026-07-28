@@ -1,0 +1,46 @@
+name = "safesteps"
+main = "src/index.js"
+compatibility_date = "2025-01-15"
+
+# The Worker serves the built site as well as the API, so the game, the dashboard
+# page and /collect all share one origin. That is not just tidier — same-origin
+# means there is no CORS to get wrong, and one deploy instead of two.
+#
+# Static assets are matched first; only paths that are not files (/collect,
+# /dashboard.json, /health) fall through to src/index.js. Directory requests
+# resolve their index.html, so /dashboard/ serves dashboard/index.html.
+[assets]
+directory = "../dist"
+not_found_handling = "none"
+
+# Hourly aggregation: sessions quiet for SETTLE_MINUTES are folded into the agg_*
+# tables and their raw rows deleted. This is what makes the backend "automatic" —
+# nothing to click, no menu, no manual rebuild.
+[triggers]
+crons = ["0 * * * *"]
+
+# Fill database_id in after `wrangler d1 create safesteps` — see README.md.
+[[d1_databases]]
+binding = "DB"
+database_name = "safesteps"
+database_id = "PUT_YOUR_D1_DATABASE_ID_HERE"
+
+[vars]
+# How long a session must be quiet before it is aggregated. Longer than the
+# longest plausible playthrough: a session split across two runs would
+# double-count the player and could resolve the wrong "first attempt".
+SETTLE_MINUTES = "45"
+
+# ?test=1 rows are purged with everything else but never counted. Set to "true"
+# only to preview the dashboard against seeded data, then set it back and reset
+# the aggregates — once raw rows are purged, fake sessions cannot be subtracted.
+AGGREGATE_TEST_ROWS = "false"
+
+# Comma-separated. Now that the game is served by this same Worker, posts are
+# same-origin and CORS does not apply to them at all — this only matters if you
+# also serve the game from somewhere else (a GitHub Pages mirror, say). Empty
+# means "*".
+ALLOWED_ORIGINS = ""
+
+# Secrets are NOT set here. Run once:
+#   wrangler secret put DASHBOARD_KEY

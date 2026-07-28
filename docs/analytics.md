@@ -9,6 +9,12 @@ it is the strongest thing to put against root cause 3.
 It is off by default. Nothing is sent unless `VITE_ANALYTICS_URL` is set at
 build time, so local dev and forks stay silent.
 
+> **The site and the backend are one Cloudflare Worker — see [`../worker/README.md`](../worker/README.md).**
+> The game posts to `/collect` on its own origin, so there is no endpoint URL to
+> configure; collection, hourly aggregation and the raw-event purge run
+> automatically; and nothing depends on a personal Google account. The Apps Script
+> and Sheets sections below are kept only for reading the historical Sheet.
+
 ## What is collected
 
 | Event | Fields | Answers |
@@ -27,7 +33,7 @@ Every row also carries a random per-tab id (`sid`) so one play session can be
 grouped together, a timestamp, and a `test` flag.
 
 **Testing against the live site:** open it with `?test=1` on the end of the URL
-— e.g. `https://adecentname.github.io/?test=1` — and every row from that tab is
+— e.g. `https://<your-domain>/?test=1` — and every row from that tab is
 marked, so your own checks never contaminate the real numbers.
 
 **Not collected:** names, emails, IP addresses, the reflection screen's typed
@@ -36,7 +42,11 @@ cannot be traced to a person. Keep the wording in the deck as "no accounts,
 nothing personal collected" — the older "no data collected" line stops being
 true once this is switched on.
 
-## Endpoint: Google Apps Script → Google Sheet
+## Legacy endpoint: Google Apps Script → Google Sheet
+
+> Superseded by the Worker. Follow [`../worker/README.md`](../worker/README.md)
+> for the live setup; keep this section only if you need to stand the old Sheet
+> pipeline back up.
 
 Free, no server, no card, and the data lands in a Sheet you can chart straight
 into the deck. (If you outgrow it, a Cloudflare Worker + D1 is the same client
@@ -165,7 +175,10 @@ function getTab_() {
 19. **New repository secret**. Name it exactly `ANALYTICS_URL`, paste the
     `/exec` URL as the value, **Add secret**.
 20. Rebuild so the secret gets baked in: push any commit, or go to **Actions →
-    Deploy to GitHub Pages → Run workflow**.
+    Deploy → Run workflow**. Note that the live build now uses the same-origin
+    `/collect` path, so restoring this legacy route also means editing
+    `.github/workflows/deploy.yml` to read the secret again — and reverting
+    `src/analytics.js` to `mode: 'no-cors'`.
 21. Once the run is green, play a chapter on the live URL and confirm new rows
     land in the Sheet.
 
@@ -186,15 +199,25 @@ you the failure — so debug from the other end:
   events, or when the tab is hidden or closed. Do not expect a row the instant
   you click something.
 
-## Reading it — the dashboard tab
+## Reading it — the dashboard page
 
-Raw event rows are unreadable by design; the aggregation lives in
-[`dashboard.gs`](dashboard.gs). Paste it into the **same** Apps Script project
-as the collector (**Extensions → Apps Script → +** next to Files **→ Script**,
-name it `Dashboard`), save, then reload the Sheet. A **SafeSteps → Rebuild
-dashboard** menu appears; run it whenever you want fresh numbers.
+`https://<the Worker URL>/dashboard/` — paste the `DASHBOARD_KEY` once and it is
+remembered on that machine. Full setup in
+[`../worker/README.md`](../worker/README.md).
 
-It writes a `dashboard` tab with five blocks, ignoring every `?test=1` row:
+**Raw events are purged on a schedule.** Every hour the Worker's cron folds
+sessions that have been quiet for 45 minutes into the permanent `agg_*` tables and
+deletes their raw rows, in one atomic D1 batch. The `events` table therefore stays
+roughly constant in size however many people play, and the dashboard keeps
+working indefinitely. `?test=1` rows are purged along with everything else but
+never counted.
+
+The trade: after a purge you can only compute the metrics `agg_*` already stores.
+They are marginal counts, not joint ones, so a *new* question about a past period
+("did players who failed `r_s1` drop out more often?") is permanently
+unanswerable. **Add a metric before the data it needs is purged**, not after.
+
+The page shows five blocks:
 
 - **Headline** — players, finish rate, and report-walkthrough completion rate.
   These are the three numbers for the slide.
@@ -209,13 +232,21 @@ It writes a `dashboard` tab with five blocks, ignoring every `?test=1` row:
   root-cause-3 number.
 - **Chapters** — completions, average meter, and the tier spread.
 
-To keep it current without clicking: **Triggers** (clock icon in Apps Script) →
-**Add trigger** → `buildDashboard`, time-driven, daily.
+Every stored figure is a count or a sum — never a percentage or an average,
+because those cannot be merged across runs without silently weighting a 3-player
+week like a 300-player one. Rates are computed when `/dashboard.json` is read. To
+inspect the tables directly:
+
+```bash
+cd worker
+npx wrangler d1 execute safesteps --remote --command "SELECT * FROM agg_scene"
+```
 
 ### Doing it by hand instead
 
-Make a second tab and point these at `events`. Two hundred players is a few
-thousand rows — well inside what a Sheet handles.
+The Sheets formulas below only apply to the legacy pipeline, and even there they
+would now return almost nothing — `events` holds only the last ~45 minutes of
+play. Use them against a fresh, unpurged sheet, or query D1 as above.
 
 Columns are `A received_at · B sid · C test · D event · E chapter · F scene ·
 G pick · H verdict · I pct · J tier · K flow · L step · M ms_since_load`. Every

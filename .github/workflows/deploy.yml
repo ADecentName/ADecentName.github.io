@@ -1,27 +1,28 @@
-name: Deploy to GitHub Pages
+name: Deploy
 
-# Build the Vite app and publish it to GitHub Pages on every push to the
-# default branch. In the repo, set Settings -> Pages -> Source to
-# "GitHub Actions" (the create step in the README/setup does this for you).
+# One pipeline, one origin. Builds the site, tests the aggregation logic, applies
+# any new D1 migrations, then deploys the Worker with the built site attached as
+# static assets. The game, the dashboard page and the API all end up on the same
+# hostname.
+#
+# Required repository secrets:
+#   CLOUDFLARE_API_TOKEN   — "Edit Cloudflare Workers" template, plus D1: Edit
+#   CLOUDFLARE_ACCOUNT_ID  — Cloudflare dashboard, right-hand sidebar
+#
+# DASHBOARD_KEY is a Worker secret, not a repository one. Set it once from your
+# machine with `wrangler secret put DASHBOARD_KEY`; it survives deploys.
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-# Permissions needed for the Pages deployment.
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow one concurrent deployment; newer pushes cancel in-progress runs.
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: deploy
+  cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,39 +34,63 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: Install site dependencies
         run: npm ci
 
-      - name: Build
-        # User/org sites (<login>.github.io) serve from root "/"; project
-        # sites serve from "/<repo-name>/". Pick the right base accordingly.
-        #
-        # ANALYTICS_URL is optional: unset, the build ships with counters
-        # disabled and the game posts nothing. See docs/analytics.md.
+      - name: Validate the scene graph
+        # A dangling `next` renders a blank screen with no error, so this gates
+        # the deploy rather than being a thing someone remembers to run.
+        run: node scripts/validate-scenes.mjs
+
+      - name: Build the site
+        # Served from the Worker root, so base is "/". The analytics endpoints are
+        # same-origin relative paths — no secret needed, nothing to keep in sync,
+        # and no CORS. The dashboard *key* is never built in; the page asks for it.
         env:
-          VITE_ANALYTICS_URL: ${{ secrets.ANALYTICS_URL }}
+          VITE_BASE: /
+          VITE_ANALYTICS_URL: /collect
+          VITE_DASHBOARD_URL: /dashboard.json
+        run: npm run build
+
+      - name: Install worker dependencies
+        working-directory: worker
+        run: npm install
+
+      - name: Test aggregation logic
+        # Metric definitions are the one thing that cannot be fixed after the
+        # fact: once raw events are purged, a wrong definition is a wrong number
+        # forever.
+        working-directory: worker
+        run: npm test
+
+      - name: Apply D1 migrations
+        # Before deploy: new code must never meet an old schema. Additive
+        # (CREATE TABLE IF NOT EXISTS), so re-running is a no-op.
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler d1 migrations apply safesteps --remote
+
+      - name: Deploy worker and site
+        id: deploy
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy
+
+      - name: Smoke test
         run: |
-          name="${{ github.event.repository.name }}"
-          if [[ "$name" == *.github.io ]]; then
-            export VITE_BASE=/
-          else
-            export VITE_BASE=/$name/
+          url="${{ vars.SITE_URL }}"
+          if [ -z "$url" ]; then
+            echo "SITE_URL repository variable not set — skipping smoke test."
+            exit 0
           fi
-          echo "Building with base: $VITE_BASE"
-          npm run build
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          fail=0
+          for path in /health / /dashboard/; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$url$path")
+            echo "$path -> $code"
+            [ "$code" = "200" ] || fail=1
+          done
+          exit $fail

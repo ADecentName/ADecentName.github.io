@@ -46,9 +46,11 @@ node scripts/validate-scenes.mjs   # check the scene graph after editing content
 
 ## Deployment
 
-Pushing to the `main` branch triggers the GitHub Actions workflow in
-`.github/workflows/deploy.yml`, which builds the app and publishes it to **GitHub Pages**.
-In the repository, set **Settings → Pages → Source** to **GitHub Actions** once.
+Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds the site,
+tests the analytics aggregation, applies any D1 migrations, and deploys a single
+**Cloudflare Worker** that serves the game, the dashboard page and the API from one
+origin. First-time setup (and the two repository secrets it needs) is in
+**[worker/README.md](worker/README.md)**.
 
 ## Project structure
 
@@ -60,7 +62,9 @@ src/
   engine/       SceneEngine.jsx (renders the current scene)
   components/   Title, Hub, DialogueBox, ChoiceList, InfoPanel, FeedbackModal,
                 ScoreHUD, ChapterEndScreen, EndingScreen
+  dashboard/    the anonymous-usage report served at /dashboard/
   styles/       global.css
+worker/         analytics backend — Cloudflare Worker + D1 (see worker/README.md)
 scripts/        validate-scenes.mjs (scene-graph integrity check)
 ```
 
